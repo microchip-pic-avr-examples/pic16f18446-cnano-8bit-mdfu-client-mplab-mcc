@@ -39,7 +39,7 @@
         "author": "Chadd Frasier",
         "peripherals": [
             "UART",
-            "NVM"
+            "Memory Module"
         ],
         "keywords": [
             "Melody",
@@ -47,7 +47,14 @@
             "Curiosity",
 			"Curiosity Nano",
             "Bootloader",
-            "Serial Communication"
+            "Memory",
+            "Serial Communication",
+            "EUSART",
+            "Virtual COM Port"
+            "Microchip Device Firmware Update",
+            "8-Bit MDFU Client",
+            "MDFU",
+            "File Transfer Protocol"
         ],
         "additionalData": {
             "longDescription": {
