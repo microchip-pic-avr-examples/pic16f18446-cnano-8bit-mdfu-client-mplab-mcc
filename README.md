@@ -6,8 +6,9 @@
 
 This repository provides the MPLAB® X projects needed to configure some basic MDFU bootloader solutions for the PIC16F18446 Curiosity Nano Evaluation Board using code generated from the MPLAB® Code Configurator (MCC).
 
-The MDFU Ecosystem is a device firmware update ecosystem that is enabled through a File-Based Transfer Protocol (FTP) and a custom image format. This repository provides the basic starting point to configure and customize the 8-Bit MDFU Client library on the PIC16F18446 Curiosity Nano and also provides instructions for running the examples.
+The Microchip Device Firmware Update (MDFU) is a device firmware update ecosystem that uses a device agnostic host application to update the application firmware. The application image that is loaded into the host follows a custom file format that includes the device and application-specific parameters needed to perform the update. This repository provides the basic starting point to configure and customize the MCC Melody 8-Bit MDFU Client library on the PIC16F18446 Curiosity Nano development board and also provides instructions for running the examples.
 
+---
 ## Related Documentation
 
 - [PIC16F18446 Family Product Page](https://www.microchip.com/en-us/products/microcontrollers-and-microprocessors/8-bit-mcus/pic-mcus/pic16f18446)
@@ -15,22 +16,25 @@ The MDFU Ecosystem is a device firmware update ecosystem that is enabled through
 - [8-Bit MDFU Client v1.0.0-beta.1 Release Note](https://onlinedocs.microchip.com/oxy/GUID-9CE46BA1-9CDF-4B9C-9C73-4793B27ED320-en-US-2/index.html)
 - [8-Bit MDFU Client v1.0.0-beta.1 API Documentation](https://onlinedocs.microchip.com/oxy/GUID-01EC9542-92FF-436D-91FB-7CBEEE66D701-en-US-2/index.html)
 
+---
 ## Software Used
 
-- MPLAB® X IDE 6.15.0 or newer [(MPLAB® X IDE 6.15)](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-x-ide?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
-- MPLAB® XC8 2.45.0 or newer compiler [(MPLAB® XC8 2.45)](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-xc-compilers?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
-- MPLAB® Code Configurator (MCC) 5.4.1 or newer [(microchip.com/mplab/mplab-code-configurator)](https://www.microchip.com/mplab/mplab-code-configurator)
+- MPLAB® X IDE 6.15.0 [(MPLAB® X IDE 6.15)](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-x-ide?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
+- MPLAB® XC8 2.45.0 [(MPLAB® XC8 2.45)](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-xc-compilers?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
+- MPLAB® Code Configurator (MCC) 5.4.1 [(microchip.com/mplab/mplab-code-configurator)](https://www.microchip.com/mplab/mplab-code-configurator)
 - MPLAB® Code Configurator (MCC) Device Libraries PIC10 / PIC12 / PIC16 / PIC18 MCUs [(microchip.com/mplab/mplab-code-configurator)](https://www.microchip.com/mplab/mplab-code-configurator)
 - Python 3.8 or later [(Python)](https://www.python.org/downloads/)
-- pyfwimagebuilder v1.0.1.14 or newer [(pyfwimagebuilder)](https://pypi.org/project/pyfwimagebuilder/)
-- pymdfu v1.0.1.5 or newer[(pymdfu)](https://pypi.org/project/pymdfu/)
+- pyfwimagebuilder v1.0.1.14 [(pyfwimagebuilder)](https://pypi.org/project/pyfwimagebuilder/)
+- pymdfu v1.0.1.5 [(pymdfu)](https://pypi.org/project/pymdfu/)
 
+---
 ## Hardware Used
 
 - PIC16F18446 Curiosity Nano [(DM164144)](https://www.microchip.com/en-us/development-tool/DM164144)
 
 [![PIC16F18446_CNano](images\190702-MCU8-PHOTO-DM164144-Front-Transparent_crop.png)](images\190702-MCU8-PHOTO-DM164144-Front-Transparent_crop.png)
 
+---
 ## Setup
 The following project setup steps have been followed for each example project pair. If something goes wrong in running these examples, validate that the settings in your project are consistent with the options seen in this section.
 
@@ -114,6 +118,7 @@ The following project setup steps have been followed for each example project pa
 
 [![IO-Settings](images\ProjectProperties.PNG)](images\ProjectProperties.PNG)
 
+---
 ### Application Setup
 [![app-builder](images\AppConfigurationOverview.PNG)](images\AppConfigurationOverview.PNG)
 
