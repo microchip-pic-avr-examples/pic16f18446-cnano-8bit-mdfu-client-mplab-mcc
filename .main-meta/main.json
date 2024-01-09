@@ -50,7 +50,7 @@
             "Memory",
             "Serial Communication",
             "EUSART",
-            "Virtual COM Port"
+            "Virtual COM Port",
             "Microchip Device Firmware Update",
             "8-Bit MDFU Client",
             "MDFU",
