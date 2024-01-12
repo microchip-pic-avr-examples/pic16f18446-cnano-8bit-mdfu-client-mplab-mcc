@@ -11,7 +11,7 @@
 */
 
 /*
-© [2024] Microchip Technology Inc. and its subsidiaries.
+ï¿½ [2024] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -32,6 +32,18 @@
 */
 #include "mcc_generated_files/system/system.h"
 #include "mcc_generated_files/timer/delay.h"
+
+#include <stdint.h>
+#ifdef __XC8__
+#include <xc.h>
+#endif
+
+volatile const uint16_t
+#ifdef __XC8__
+__at(0x3FFE)
+#endif
+applicationFooter __attribute__((used, section("application_footer"))) = 0xFFFF;
+
 /*
     Main application
 */
