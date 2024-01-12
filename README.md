@@ -9,10 +9,10 @@ This is an example on how to use the MPLAB Code Configurator (MCC) generated cod
 The MDFU is a device firmware update ecosystem that uses a device agnostic host application to update the application firmware. The application image that is loaded into the host follows a custom file format that includes the device and application-specific parameters needed to perform the update. This repository provides the basic starting point to configure and customize the MCC Melody 8-Bit MDFU Client library on the PIC16F18446 Curiosity Nano development board and also provides instructions for running the examples.
 
 This example will demonstrate:
-- How to configure the 8-Bit MDFU Client Library in MCC Melody for different verification schemes.
-- How to create a simple Blinky LED application.
-- How to use [`pyfwimagebuilder`](https://pypi.org/project/pyfwimagebuilder/) command line interface to convert application hex file into application image.
-- How to use [`pymdfu`](https://pypi.org/project/pymdfu/) command line interface to update the application firmware.
+- How to configure the 8-Bit MDFU Client Library in MCC Melody for different verification schemes
+- How to create a simple Blinky LED application
+- How to use [`pyfwimagebuilder`](https://pypi.org/project/pyfwimagebuilder/) command line interface to convert application hex file into application image
+- How to use [`pymdfu`](https://pypi.org/project/pymdfu/) command line interface to update the application firmware
 
 ## Related Documentation
 
