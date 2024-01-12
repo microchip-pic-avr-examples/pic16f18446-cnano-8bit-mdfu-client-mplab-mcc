@@ -14,14 +14,6 @@ This example will demonstrate:
 - How to use [`pyfwimagebuilder`](https://pypi.org/project/pyfwimagebuilder/) command line interface to convert application hex file into application image.
 - How to use [`pymdfu`](https://pypi.org/project/pymdfu/) command line interface to update the application firmware.
 
-## Table of Contents
-- [Related Documentation](#related-documentation)
-- [Software Used](#software-used)
-- [Hardware Used](#hardware-used)
-- [Setup](#setup)
-- [Operation](#operation)
-- [Summary](#summary)
-
 ## Related Documentation
 
 - [PIC16F18446 Family Product Page](https://www.microchip.com/en-us/products/microcontrollers-and-microprocessors/8-bit-mcus/pic-mcus/pic16f18446)
@@ -250,3 +242,12 @@ Right click, then select Clean and Build
 ## Summary
 
 This repository demonstrates how to configure the 8-Bit MDFU Client library in MCC to enable device firmware updates over UART on a PIC16F18446 Curiosity Nano.
+
+## Contents
+- [Back to Related Documentation](#related-documentation)
+- [Back to Software Used](#software-used)
+- [Back to Hardware Used](#hardware-used)
+- [Back to Setup](#setup)
+- [Back to Operation](#operation)
+- [Back to Summary](#summary)
+- [Back to Top](#getting-started-with-the-8-bit-mdfu-client-for-pic16f18446-using-mplab®-x)
