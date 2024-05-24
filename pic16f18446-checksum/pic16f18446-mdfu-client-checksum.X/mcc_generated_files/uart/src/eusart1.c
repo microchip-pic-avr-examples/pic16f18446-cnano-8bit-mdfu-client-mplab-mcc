@@ -1,44 +1,44 @@
 /**
  * EUSART1 Generated Driver API Header File
- * 
+ *
  * @file eusart1.c
- * 
+ *
  * @ingroup eusart1
- * 
+ *
  * @brief This is the generated driver implementation file for the EUSART1 driver using CCL
  *
  * @version EUSART1 Driver Version 3.0.0
-*/
+ */
 
 /*
 © [2024] Microchip Technology Inc. and its subsidiaries.
 
-    Subject to your compliance with these terms, you may use Microchip 
-    software and any derivatives exclusively with Microchip products. 
-    You are responsible for complying with 3rd party license terms  
-    applicable to your use of 3rd party software (including open source  
-    software) that may accompany Microchip software. SOFTWARE IS ?AS IS.? 
-    NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS 
-    SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT,  
-    MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT 
-    WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY 
-    KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF 
-    MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE 
-    FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP?S 
-    TOTAL LIABILITY ON ALL CLAIMS RELATED TO THE SOFTWARE WILL NOT 
-    EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR 
+    Subject to your compliance with these terms, you may use Microchip
+    software and any derivatives exclusively with Microchip products.
+    You are responsible for complying with 3rd party license terms
+    applicable to your use of 3rd party software (including open source
+    software) that may accompany Microchip software. SOFTWARE IS ?AS IS.?
+    NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS
+    SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT,
+    MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT
+    WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY
+    KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF
+    MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE
+    FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP?S
+    TOTAL LIABILITY ON ALL CLAIMS RELATED TO THE SOFTWARE WILL NOT
+    EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR
     THIS SOFTWARE.
-*/
+ */
 
 /**
   Section: Included Files
-*/
+ */
 #include "../eusart1.h"
 
 /**
   Section: Macro Declarations
-*/
+ */
 
 /**
   Section: Driver Interface
@@ -73,12 +73,12 @@ const uart_drv_interface_t UART1 = {
 
 /**
   Section: EUSART1 variables
-*/
+ */
 volatile eusart1_status_t eusart1RxLastError;
 
 /**
   Section: EUSART1 APIs
-*/
+ */
 
 void (*EUSART1_FramingErrorHandler)(void);
 void (*EUSART1_OverrunErrorHandler)(void);
@@ -86,29 +86,28 @@ void (*EUSART1_OverrunErrorHandler)(void);
 static void EUSART1_DefaultFramingErrorCallback(void);
 static void EUSART1_DefaultOverrunErrorCallback(void);
 
-
 /**
   Section: EUSART1  APIs
-*/
+ */
 
 void EUSART1_Initialize(void)
 {
     // Set the EUSART1 module to the options selected in the user interface.
 
-    //ABDEN disabled; WUE disabled; BRG16 16bit_generator; SCKP Non-Inverted; 
-    BAUD1CON = 0x48; 
-    //ADDEN disabled; CREN enabled; SREN disabled; RX9 8-bit; SPEN enabled; 
-    RC1STA = 0x90; 
-    //TX9D 0x0; BRGH hi_speed; SENDB sync_break_complete; SYNC asynchronous; TXEN enabled; TX9 8-bit; CSRC client; 
-    TX1STA = 0x26; 
-    //SPBRGL 103; 
-    SP1BRGL = 0x67; 
-    //SPBRGH 0; 
-    SP1BRGH = 0x0; 
+    //ABDEN disabled; WUE disabled; BRG16 16bit_generator; SCKP Non-Inverted;
+    BAUD1CON = 0x48;
+    //ADDEN disabled; CREN enabled; SREN disabled; RX9 8-bit; SPEN enabled;
+    RC1STA = 0x90;
+    //TX9D 0x0; BRGH hi_speed; SENDB sync_break_complete; SYNC asynchronous; TXEN enabled; TX9 8-bit; CSRC client;
+    TX1STA = 0x26;
+    //SPBRGL 103;
+    SP1BRGL = 0x67;
+    //SPBRGH 0;
+    SP1BRGH = 0x0;
 
     EUSART1_FramingErrorCallbackRegister(EUSART1_DefaultFramingErrorCallback);
     EUSART1_OverrunErrorCallbackRegister(EUSART1_DefaultOverrunErrorCallback);
-    eusart1RxLastError.status = 0;  
+    eusart1RxLastError.status = 0;
 
 }
 
@@ -131,7 +130,6 @@ inline void EUSART1_Disable(void)
 {
     RC1STAbits.SPEN = 0;
 }
-
 
 inline void EUSART1_TransmitEnable(void)
 {
@@ -165,39 +163,39 @@ inline void EUSART1_SendBreakControlDisable(void)
 
 inline void EUSART1_AutoBaudSet(bool enable)
 {
-    if(enable)
+    if (enable)
     {
         BAUD1CONbits.ABDEN = 1;
     }
     else
     {
-       BAUD1CONbits.ABDEN = 0; 
+        BAUD1CONbits.ABDEN = 0;
     }
 }
 
 inline bool EUSART1_AutoBaudQuery(void)
 {
-return (bool)(!BAUD1CONbits.ABDEN);
+    return (bool) (!BAUD1CONbits.ABDEN);
 }
 
 inline bool EUSART1_IsAutoBaudDetectOverflow(void)
 {
-    return (bool)BAUD1CONbits.ABDOVF; 
+    return (bool) BAUD1CONbits.ABDOVF;
 }
 
 inline void EUSART1_AutoBaudDetectOverflowReset(void)
 {
-    BAUD1CONbits.ABDOVF = 0; 
+    BAUD1CONbits.ABDOVF = 0;
 }
 
 bool EUSART1_IsRxReady(void)
 {
-    return (bool)(PIR3bits.RC1IF);
+    return (bool) (PIR3bits.RC1IF);
 }
 
 bool EUSART1_IsTxReady(void)
 {
-    return (bool)(PIR3bits.TX1IF && TX1STAbits.TXEN);
+    return (bool) (PIR3bits.TX1IF && TX1STAbits.TXEN);
 }
 
 bool EUSART1_IsTxDone(void)
@@ -213,21 +211,21 @@ size_t EUSART1_ErrorGet(void)
 uint8_t EUSART1_Read(void)
 {
     eusart1RxLastError.status = 0;
-    if(RC1STAbits.OERR)
+    if (RC1STAbits.OERR)
     {
         eusart1RxLastError.oerr = 1;
-        if(NULL != EUSART1_OverrunErrorHandler)
+        if (NULL != EUSART1_OverrunErrorHandler)
         {
             EUSART1_OverrunErrorHandler();
-        }   
+        }
     }
-    if(RC1STAbits.FERR)
+    if (RC1STAbits.FERR)
     {
         eusart1RxLastError.ferr = 1;
-        if(NULL != EUSART1_FramingErrorHandler)
+        if (NULL != EUSART1_FramingErrorHandler)
         {
             EUSART1_FramingErrorHandler();
-        }   
+        }
     }
     return RC1REG;
 }
@@ -239,7 +237,7 @@ void EUSART1_Write(uint8_t txData)
 
 static void EUSART1_DefaultFramingErrorCallback(void)
 {
-    
+
 }
 
 static void EUSART1_DefaultOverrunErrorCallback(void)
@@ -251,7 +249,7 @@ static void EUSART1_DefaultOverrunErrorCallback(void)
 
 void EUSART1_FramingErrorCallbackRegister(void (* callbackHandler)(void))
 {
-    if(NULL != callbackHandler)
+    if (NULL != callbackHandler)
     {
         EUSART1_FramingErrorHandler = callbackHandler;
     }
@@ -259,9 +257,9 @@ void EUSART1_FramingErrorCallbackRegister(void (* callbackHandler)(void))
 
 void EUSART1_OverrunErrorCallbackRegister(void (* callbackHandler)(void))
 {
-    if(NULL != callbackHandler)
+    if (NULL != callbackHandler)
     {
         EUSART1_OverrunErrorHandler = callbackHandler;
-    }    
+    }
 }
 

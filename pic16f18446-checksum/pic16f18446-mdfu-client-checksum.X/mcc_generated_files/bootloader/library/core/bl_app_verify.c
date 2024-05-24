@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip
  * software and any derivatives exclusively with Microchip products.
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  * @file        bl_app_verify.c
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  *
  * @brief       This file contains APIs to support verification of the
  *              application image space. \n
@@ -34,15 +34,15 @@
 #include "bl_config.h"
 #include "../../../nvm/nvm.h"
 
-#define HASH_DATA_SIZE      2U
-#define END_OF_APP          ((flash_address_t)((PROGMEM_SIZE - 1U) - HASH_DATA_SIZE))
-#define HASH_STORE_ADDRESS  (flash_address_t)(END_OF_APP + 1U)
-#define HASH_CALC_LENGTH    (HASH_STORE_ADDRESS - BL_APPLICATION_START_ADDRESS)
+#define HASH_DATA_SIZE      (uint32_t)2U
+#define END_OF_APP          (((uint32_t)PROGMEM_SIZE - (uint32_t)1U) - HASH_DATA_SIZE)
+#define HASH_STORE_ADDRESS  (END_OF_APP + (uint32_t)1U)
+#define HASH_CALC_LENGTH    (HASH_STORE_ADDRESS - (uint32_t)BL_APPLICATION_START_ADDRESS)
 
-static void BL_CalculateChecksum(flash_address_t startAddress, uint32_t length, uint16_t *checkSum);
-static bl_result_t BL_ValidateChecksum(flash_address_t startAddress, uint32_t length, flash_address_t checkAddress);
+static void ChecksumCalculate(flash_address_t startAddress, uint32_t length, uint16_t *checkSum);
+static bl_result_t ChecksumValidate(flash_address_t startAddress, uint32_t length, flash_address_t checkAddress);
 
-static void BL_CalculateChecksum(flash_address_t startAddress, uint32_t length, uint16_t *checkSum)
+static void ChecksumCalculate(flash_address_t startAddress, uint32_t length, uint16_t *checkSum)
 {
     flash_address_t readAddress = startAddress;
 #if defined(_PIC18) || defined(AVR_ARCH)
@@ -62,11 +62,10 @@ static void BL_CalculateChecksum(flash_address_t startAddress, uint32_t length, 
 #endif
 }
 
-static bl_result_t BL_ValidateChecksum(flash_address_t startAddress, uint32_t length, flash_address_t checkAddress)
+static bl_result_t ChecksumValidate(flash_address_t startAddress, uint32_t length, flash_address_t checkAddress)
 {
 
     bl_result_t result = BL_FAIL;
-    uint16_t refChecksum = 0xFFFFU;
     uint16_t check_sum = 0;
 
     bool refAddrInsideEvaluatedArea = (((checkAddress + 1U) >= startAddress) && (checkAddress < (startAddress + length)));
@@ -82,11 +81,11 @@ static bl_result_t BL_ValidateChecksum(flash_address_t startAddress, uint32_t le
     }
     else
     {
-        BL_CalculateChecksum(startAddress, length, &check_sum);
+        ChecksumCalculate(startAddress, length, &check_sum);
 #if defined(_PIC18) || defined(AVR_ARCH)
-        refChecksum = ((uint16_t) (FLASH_Read(checkAddress + 1U) << 8U) | FLASH_Read(checkAddress));
+        uint16_t refChecksum = ((uint16_t) (FLASH_Read(checkAddress + 1U) << 8U) | FLASH_Read(checkAddress));
 #elif !defined(_PIC18) && defined(PIC_ARCH)
-        refChecksum = (uint16_t) (
+        uint16_t refChecksum = (uint16_t) (
                 ((FLASH_Read(checkAddress + 1U) & 0x00FFU) << 8U)
                 | (FLASH_Read(checkAddress) & 0x00FFU)
                 );
@@ -104,12 +103,12 @@ static bl_result_t BL_ValidateChecksum(flash_address_t startAddress, uint32_t le
     return result;
 }
 
-bl_result_t BL_VerifyImage(void)
+bl_result_t BL_ImageVerify(void)
 {
     bl_result_t result = BL_ERROR_VERIFICATION_FAIL;
 
     /* cppcheck-suppress misra-c2012-7.2; This rule cannot be followed due to assembly syntax requirements. */
-    result = BL_ValidateChecksum(BL_APPLICATION_START_ADDRESS, HASH_CALC_LENGTH, HASH_STORE_ADDRESS);
+    result = ChecksumValidate(BL_APPLICATION_START_ADDRESS, HASH_CALC_LENGTH, HASH_STORE_ADDRESS);
 
     return result;
 }

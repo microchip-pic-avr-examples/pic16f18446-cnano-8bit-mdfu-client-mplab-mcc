@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_result_type.h
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  *
  * @brief       This file contains an enumeration of all the bootloader status codes used by the core.
  */
@@ -32,31 +32,31 @@
 #define	BL_RESULT_TYPE_H
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @enum bl_result_t
  * @brief Contains codes used for the return values of the bootloader APIs.
  * @var bl_result_t:: BL_PASS
- * 0x81U - Command success status. \n
+ * 0x81U - Command success status \n
  * @var bl_result_t:: BL_BUSY
- * 0x3CU - Command is busy or loading status. \n
+ * 0x3CU - Command is busy or loading status \n
  * @var bl_result_t:: BL_FAIL
- * 0xC3U - Process failed unexpectedly. \n
+ * 0xC3U - Process failed unexpectedly \n
  * @var bl_result_t:: BL_ERROR_COMMUNICATION_FAIL
- * 0x18U - Command reception failed. \n
+ * 0x18U - Command reception failed \n
  * @var bl_result_t:: BL_ERROR_FRAME_VALIDATION_FAIL
- * 0xFFU - Command packet validation failed. \n
+ * 0xFFU - Command packet validation failed \n
  * @var bl_result_t:: BL_ERROR_BUFFER_OVERLOAD
- * 0xBDU - Command overload or buffer error status.\n
+ * 0xBDU - Command overload or buffer error status \n
  * @var bl_result_t:: BL_ERROR_INVALID_ARGUMENTS
- * 0xE7U - Process received incorrect input. \n
+ * 0xE7U - Process received incorrect input \n
  * @var bl_result_t:: BL_ERROR_UNKNOWN_COMMAND
- * 0x42U - Command invalid error status. \n
+ * 0x42U - Command invalid error status \n
  * @var bl_result_t:: BL_ERROR_ADDRESS_OUT_OF_RANGE
- * 0x24U - Command address error status. \n
+ * 0x24U - Command address error status \n
  * @var bl_result_t:: BL_ERROR_COMMAND_PROCESSING
- * 0x7EU - Command processing error status. \n
+ * 0x7EU - Command processing error status \n
  * @var bl_result_t:: BL_ERROR_VERIFICATION_FAIL
- * 0xDBU - Command failed verification status. \n
+ * 0xDBU - Command failed verification status \n
  */
 typedef enum
 {
