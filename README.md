@@ -2,7 +2,7 @@
 
 [![MCHP](images/microchip.png)](https://www.microchip.com)
 
-# Getting Started With the 8-bit MDFU Client for PIC16F18446 Using MPLAB® X
+# Getting Started With the 8-Bit MDFU Client for PIC16F18446 Using MPLAB® X
 
 This is an example on how to use the MPLAB Code Configurator (MCC) generated code for configuring some basic Microchip Device Firmware Update (MDFU) bootloader solutions for PIC16F18446 Curiosity Nano Evaluation board.
 
@@ -17,15 +17,14 @@ This example will demonstrate:
 ## Related Documentation
 
 - [PIC16F18446 Family Product Page](https://www.microchip.com/en-us/products/microcontrollers-and-microprocessors/8-bit-mcus/pic-mcus/pic16f18446)
-- [8-Bit MDFU Client Getting Started](https://onlinedocs.microchip.com/oxy/GUID-67539092-2179-43C1-8600-118A85E49693-en-US-2/index.html)
-- [8-Bit MDFU Client v1.0.0-beta.1 Release Note](https://onlinedocs.microchip.com/oxy/GUID-9CE46BA1-9CDF-4B9C-9C73-4793B27ED320-en-US-2/index.html)
-- [8-Bit MDFU Client v1.0.0-beta.1 API Documentation](https://onlinedocs.microchip.com/oxy/GUID-01EC9542-92FF-436D-91FB-7CBEEE66D701-en-US-2/index.html)
+- [8-Bit MDFU Client v1.0.0 Release Note](https://onlinedocs.microchip.com/v2/keyword-lookup?keyword=RELEASE_NOTES_8BIT_MDFU_CLIENT_LIBRARY&version=latest&redirect=true)
+- [Getting Started Document, API Reference and Update Image Specification](https://onlinedocs.microchip.com/v2/keyword-lookup?keyword=8BIT_MDFU_CLIENT&version=latest&redirect=true)
 
 ## Software Used
 
-- [MPLAB® X IDE 6.15.0](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-x-ide?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
-- [MPLAB® XC8 2.45.0](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-xc-compilers?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
-- [MPLAB® Code Configurator (MCC) 5.4.1](https://www.microchip.com/mplab/mplab-code-configurator)
+- [MPLAB® X IDE 6.20.0](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-x-ide?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
+- [MPLAB® XC8 2.46.0](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-xc-compilers?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
+- [MPLAB® Code Configurator (MCC) 5.5.1](https://www.microchip.com/mplab/mplab-code-configurator)
 - [MPLAB® Code Configurator (MCC) Device Libraries PIC10 / PIC12 / PIC16 / PIC18 MCUs](https://www.microchip.com/mplab/mplab-code-configurator)
 - [Python 3.8 or later](https://www.python.org/downloads/)
 - [pyfwimagebuilder v1.0.1.14](https://pypi.org/project/pyfwimagebuilder/)
@@ -119,7 +118,7 @@ The following project setup is the same for all the example project pairs. If so
 
 **8-Bit MDFU Client Project Properties**
 - ROM Ranges: This option is configured based on the start address of the application
-- For example, if the application starts at 0xC00 then this value will reflect as `00-7FF,800-BFF`
+- For example, if the application starts at 0xD00 then this value will reflect as `00-7FF,800-CFF`
 
 [![IO-Settings](images/ProjectProperties.PNG)](images/ProjectProperties.PNG)
 
@@ -146,7 +145,7 @@ The following project setup is the same for all the example project pairs. If so
 **Project Properties**
 
 Linker Additional Options
-- Codeoffset: 0x<APP_START> = 0xC00
+- Codeoffset: 0x<APP_START> = 0xD00
 - Checksum: Dependant on the verification scheme
 *Check the table below to understand how the Checksum option must be configured in the application projects*
 
@@ -156,16 +155,16 @@ Linker Additional Options
 |---- |---- |
 |Reset Vector | N/A |
 |Status Byte | N/A |
-|Checksum | C00-3FFD@3FFE,width=-2,algorithm=2,code=3F |
+|Checksum | D00-3FFD@3FFE,width=-2,algorithm=2,code=3F |
 |CRC-16 | D00-3FFD@3FFE,width=-2,algorithm=5,offset=FFFF,polynomial=1021,code=3F |
-|CRC-32 | D00-3FFB@3FFC,width=-4,algorithm=-5,offset=FFFFFFFF,polynomial=04C11DB7,code=3F |
+|CRC-32 | E00-3FFB@3FFC,width=-4,algorithm=-5,offset=FFFFFFFF,polynomial=04C11DB7,code=3F |
 
 Fill Flash Memory
 - Which area to fill: Provide Range to fill
 - How to fill it: Constant or incremental value
 - Constant: 0x3FFF
 - Increment/Decrement: No Incrementing
-- Memory address range: 0x<APP_START>:0x<FLASH_END> = 0xC00:0x3FFF
+- Memory address range: 0x<APP_START>:0x<FLASH_END> = 0xD00:0x3FFF
 
 [![app_fill](images/AppFill.PNG)](images/AppFill.PNG)
 
