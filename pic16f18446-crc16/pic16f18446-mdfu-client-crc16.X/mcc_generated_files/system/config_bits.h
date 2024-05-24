@@ -7,7 +7,9 @@
  * 
  * @brief This file contains the API prototype for the Configuration Bits driver.
  *
- * @version Driver Version 2.0.1
+ * @version Driver Version 2.0.2
+ *
+ * @version Package Version 1.0.5
 */
 
 /*
@@ -36,7 +38,7 @@
 
 #include "../system/clock.h"
 
-#endif //CONFIG_BITS_H
+#endif /* CONFIG_BITS_H */
 /**
  End of File
 */

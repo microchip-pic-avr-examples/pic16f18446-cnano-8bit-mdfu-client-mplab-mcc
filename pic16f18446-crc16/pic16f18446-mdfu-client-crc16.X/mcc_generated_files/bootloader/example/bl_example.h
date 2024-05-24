@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_example.h
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  *
  * @brief       This file contains prototypes for APIs that can be used to run a device firmware upgrade process.
  */
@@ -42,13 +42,13 @@ typedef enum
 } bl_example_result_t;
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @brief This API will be used to initialize the startup logic.
  */
 bl_example_result_t BL_ExampleInitialize(void);
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @brief This API will be used to run the bootloader process. This API will be run in
  * a while loop until the bootloader cycle is completed and the device performs a reset.
  * 

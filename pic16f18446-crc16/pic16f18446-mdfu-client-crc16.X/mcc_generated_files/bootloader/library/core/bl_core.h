@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,14 +22,13 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_core.h
- * @defgroup    8bit_mdfu_client 8-Bit MDFU Client Library
+ * @defgroup    mdfu_client_8bit 8-bit MDFU Client Library
  * 
  * @brief       This file contains API prototypes to
  *              perform bootloader operations.
  */
 
 #ifndef BL_CORE_H
-/* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 #define BL_CORE_H
 
 #include <stdint.h>
@@ -40,20 +39,20 @@
 #include "../../../nvm/nvm.h"
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @enum bl_block_type_t
  * @brief Contains codes corresponding to the various types
  * of data blocks that the bootloader supports.
  * @var bl_block_type_t:: UNLOCK_BOOTLOADER
  * 0x01U - Unlock Bootloader Block - Identifies an
  * operational block that holds precondition metadata to be checked and validated before
- * any memory changing actions occur in the bootloader.
+ * any memory-changing actions occur in the bootloader
  * @var bl_block_type_t:: WRITE_FLASH
  * 0x02U - Flash Data Block - Identifies operational blocks
- * that need to be written into the Flash section of memory.
+ * that need to be written into the Flash section of memory
  * @var bl_block_type_t:: WRITE_EEPROM
  * 0x03U - EEPROM Data Block - Identifies operational blocks
- * that should be written into the EEPROM section of memory.
+ * that should be written into the EEPROM section of memory
  */
 typedef enum
 {
@@ -65,7 +64,7 @@ typedef enum
 } bl_block_type_t;
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @struct bl_command_header_t
  * @brief Operational data orientation for each operation.
  * @var bl_command_header_t:: startAddress
@@ -80,24 +79,23 @@ typedef enum
  * Member 'pageReadUnlockKey' contains the unlock key needed to read a page of memory.
  */
 typedef struct
-{ /* cppcheck-suppress misra-c2012-2.4; This rule will not be followed for code clarity. */
+{
     uint32_t        startAddress;
     uint16_t        pageEraseUnlockKey;
     uint16_t        pageWriteUnlockKey;
     uint16_t        byteWriteUnlockKey;
     uint16_t        pageReadUnlockKey;
-    /* cppcheck-suppress misra-c2012-2.3; This rule will not be followed for code clarity. */
  } bl_command_header_t;
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_COMMAND_HEADER_SIZE
  * Total size of operational block header part.
  */
 #define BL_COMMAND_HEADER_SIZE ((uint16_t)sizeof (bl_command_header_t))
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @struct bl_block_header_t
  * @brief Header data orientation for each block.
  * @var bl_block_header_t:: blockLength
@@ -107,21 +105,20 @@ typedef struct
  * of the payload buffer.
  */
 typedef struct
-{  /* cppcheck-suppress misra-c2012-2.4; This rule will not be followed for code clarity. */
+{
     uint16_t        blockLength;
     bl_block_type_t blockType;
-    /* cppcheck-suppress misra-c2012-2.3; This rule will not be followed for code clarity. */
 } bl_block_header_t;
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_BLOCK_HEADER_SIZE
  * Total size of basic block header part.
  */
 #define BL_BLOCK_HEADER_SIZE ((uint16_t)sizeof (bl_block_header_t))
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_WRITE_BYTE_LENGTH
  * Maximum number of bytes that the bootloader can hold inside of its process buffer.
  */
@@ -132,25 +129,26 @@ typedef struct
 #endif
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_MAX_BUFFER_SIZE
  * Maximum length of data in bytes that the bootloader can receive from the host in each operational block.
  */
 #define BL_MAX_BUFFER_SIZE          (BL_BLOCK_HEADER_SIZE + BL_COMMAND_HEADER_SIZE + BL_WRITE_BYTE_LENGTH)
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @brief Performs the initialization steps required to configure the bootloader peripherals.
+ * @param None.
  * @return @ref BL_PASS - Bootloader initialization was successful
  * @return @ref BL_ERROR_COMMAND_PROCESSING - Bootloader initialization has failed
  */
 bl_result_t BL_Initialize(void);
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @brief Executes the required action based on the block type received in the bootloader data buffer
- * @param [in] bootDataPtr - Pointer to the start of bootloader operational data.
- * @param [in] bufferLength - Length of new data received by the FTP.
+ * @param [in] commandBuffer - Pointer to the start of the bootloader operational data
+ * @param [in] commandLength - Length of the new data received by the FTP
  * @return @ref BL_PASS - Process cycle finished successfully
  * @return @ref BL_FAIL - Process cycle failed unexpectedly
  * @return @ref BL_ERROR_UNKNOWN_COMMAND - Process cycle encountered an unknown command
@@ -158,13 +156,13 @@ bl_result_t BL_Initialize(void);
  * @return @ref BL_ERROR_COMMAND_PROCESSING - Process cycle failed due to a data or processing related issue
  * @return @ref BL_ERROR_ADDRESS_OUT_OF_RANGE - Process cycle failed due to an incorrect address
  */
-bl_result_t BL_ProcessBootBuffer(uint8_t * bootDataPtr, uint16_t bufferLength);
+bl_result_t BL_BootCommandProcess(uint8_t * commandBuffer, uint16_t commandLength);
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @brief Performs actions to jump the MCU program counter to 
  * the application start address.
  */
-void BL_StartApplication(void);
+void BL_ApplicationStart(void);
 
 #endif // BL_CORE_H

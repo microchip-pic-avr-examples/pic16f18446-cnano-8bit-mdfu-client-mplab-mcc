@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_config.h
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  *
  * @brief       This file contains macros and type definitions related to the
  *              bootloader client device configuration and bootloader settings.
@@ -33,7 +33,7 @@
 #define BL_BOOT_CONFIG_H
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def PIC_ARCH
  * This is a macro that corresponds to the current device architecture.
  * This macro is used to conditionally compile parts of the code needed
@@ -43,49 +43,49 @@
 #define PIC_ARCH /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 #endif
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_IMAGE_FORMAT_MAJOR_VERSION
  * Represents the major version of the image format that is
  * understood by the bootloader core. \n
  */
 #define BL_IMAGE_FORMAT_MAJOR_VERSION (0x00) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_IMAGE_FORMAT_MINOR_VERSION
  * Represents the minor version of the image format that is
  * understood by the bootloader core. \n
  */
 #define BL_IMAGE_FORMAT_MINOR_VERSION (0x03) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_IMAGE_FORMAT_PATCH_VERSION
  * Represents the patch version of the image format that is
  * understood by the bootloader core. \n
  */
 #define BL_IMAGE_FORMAT_PATCH_VERSION (0x00) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_VECTORED_INTERRUPTS_ENABLED
  * This is a macro that indicates that the bootloader supports vectored interrupts in the application.
  */
 #define BL_VECTORED_INTERRUPTS_ENABLED (1) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_APPLICATION_START_ADDRESS
  * Start of the application memory space.
  */
-#define BL_APPLICATION_START_ADDRESS (0xD00) 
+#define BL_APPLICATION_START_ADDRESS (0xD00) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_APPLICATION_INTERRUPT_VECTOR_LOW
  * Start address of the low-priority interrupt vector.
  */
 #define BL_APPLICATION_INTERRUPT_VECTOR_LOW (0xD04) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_DEVICE_ID_START_ADDRESS_U
  * Device ID address.
  */
-#define BL_DEVICE_ID_START_ADDRESS_U (0x06U)
+#define BL_DEVICE_ID_START_ADDRESS_U (0x06U) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 
 #endif // BL_BOOT_CONFIG_H

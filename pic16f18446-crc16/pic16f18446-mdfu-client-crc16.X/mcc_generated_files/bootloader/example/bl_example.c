@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip
  * software and any derivatives exclusively with Microchip products.
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  * @file        bl_example.c
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  *
  * @brief       This file contains APIs for running a bootloader update process
  *              using the FTP Handler and bootloader APIs.
@@ -34,14 +34,14 @@
 #include "bl_example.h"
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def IO_PIN_ENTRY_GetInputValue
  * This is a macro to remap the get value function of the entry pin.
  */
 #define IO_PIN_ENTRY_GetInputValue  BL_ENTRY_GetValue
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def IO_PIN_ENTRY_RUN_BL
  * This is a macro that represents the "run bootloader" signal based on the
  * entry pin activation setting.
@@ -50,7 +50,7 @@
 #define IO_PIN_ENTRY_RUN_BL         (0)
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_INDICATOR_ON
  * This is a macro for enabling the bootloader indicator pin.
  * When the pin is set to start high, the bootloader will assume
@@ -59,7 +59,7 @@
 #define BL_INDICATOR_ON             BL_INDICATOR_SetLow
 
 /**
- * @ingroup 8bit_mdfu_client
+ * @ingroup mdfu_client_8bit
  * @def BL_INDICATOR_OFF
  * This is a macro for disabling the bootloader indicator pin.
  * When the pin is set to start high, the bootloader will assume
@@ -70,12 +70,13 @@
 typedef enum
 {
     BOOTLOADER,
-    APPLICATION
+    APPLICATION,
+    ERROR_STATE,
 } bootloader_state_t;
 
 static bootloader_state_t BootState;
 
-static bool BL_CheckForcedEntry(void);
+static bool ForcedEntryCheck(void);
 
 void BL_Example(void)
 {
@@ -87,11 +88,11 @@ void BL_Example(void)
     {
     case APPLICATION:
         BL_INDICATOR_OFF();
-        BL_StartApplication();
+        BL_ApplicationStart();
         break;
     case BOOTLOADER:
         BL_INDICATOR_ON();
-        result = FTP_ProcessTask();
+        result = FTP_Task();
         break;
         default:
         // Unknown State; Do nothing
@@ -106,23 +107,32 @@ void BL_Example(void)
 
 bl_example_result_t BL_ExampleInitialize(void)
 {
-#warning "Customize the Initialization steps for the startup process and set the BootState accordingly."
-    // Make assumption: We always start in bootload state
-    BootState = BOOTLOADER;
-
-    // On startup we must figure out what the bootloader is being requested to do.
-    // If forced entry is being requested, we can short cut the verification scheme.
-    // Otherwise check for a valid application
-    if ((BL_CheckForcedEntry() == false) && (BL_VerifyImage() == BL_PASS))
+    // Initialize the FTP handler
+    bl_result_t initStatus = FTP_Initialize();
+    
+    if(initStatus == BL_PASS)
     {
-        // Set the application state
-        BootState = APPLICATION;
-    }
+#warning "Customize the Initialization steps for the startup process and set the BootState accordingly."
+        // Make assumption: We always start in bootload state
+        BootState = BOOTLOADER;
 
+        // On startup we must figure out what the bootloader is being requested to do.
+        // If forced entry is being requested, we can short cut the verification scheme.
+        // Otherwise check for a valid application
+        if ((ForcedEntryCheck() == false) && (BL_ImageVerify() == BL_PASS))
+        {
+            // Set the application state
+            BootState = APPLICATION;
+        }
+    }
+    else
+    {
+        BootState = ERROR_STATE;
+    }
     return EXAMPLE_OK;
 }
 
-static bool BL_CheckForcedEntry(void)
+static bool ForcedEntryCheck(void)
 {
     bool result = false;
 #warning "Users can write their own process startup logic and return true when a bootload is needed."
@@ -131,10 +141,10 @@ static bool BL_CheckForcedEntry(void)
         asm("nop");
     }
     // Check for entry pin signal
+    /* cppcheck-suppress misra-c2012-10.1 */
     if (IO_PIN_ENTRY_GetInputValue() == IO_PIN_ENTRY_RUN_BL)
     {
         result = true;
     }
     return result;
 }
-

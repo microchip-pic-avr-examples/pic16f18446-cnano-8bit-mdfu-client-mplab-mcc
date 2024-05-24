@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_app_verify.c
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  * 
  * @brief       This file contains APIs to support verification of the
  *              application image space.
@@ -34,29 +34,27 @@
 #include "bl_config.h"
 #include "../../../nvm/nvm.h"
 
-
 #define CRC_POLYNOMIAL    (0x1021U)
 #define CRC_SEED          (0xFFFFU)
-#define HASH_DATA_SIZE      2U
-#define END_OF_APP          ((flash_address_t)((PROGMEM_SIZE - 1U) - HASH_DATA_SIZE))
-#define HASH_STORE_ADDRESS  (flash_address_t)(END_OF_APP + 1U)
-#define HASH_CALC_LENGTH    (HASH_STORE_ADDRESS - BL_APPLICATION_START_ADDRESS)
+#define HASH_DATA_SIZE      (uint32_t)2U
+#define END_OF_APP          (((uint32_t)PROGMEM_SIZE - (uint32_t)1U) - HASH_DATA_SIZE)
+#define HASH_STORE_ADDRESS  (END_OF_APP + (uint32_t)1U)
+#define HASH_CALC_LENGTH    (HASH_STORE_ADDRESS - (uint32_t)BL_APPLICATION_START_ADDRESS)
 
-static void BL_CalculateCRC16_CCITT(flash_address_t startAddress, uint32_t length, uint16_t *crcSeed);
-static bl_result_t BL_ValidateCRC16_CCITT(flash_address_t startAddress, uint32_t length, flash_address_t crcAddress);
+static void CRC16_Calculate(flash_address_t startAddress, uint32_t length, uint16_t *crcSeed);
+static bl_result_t CRC16_Validate(flash_address_t startAddress, uint32_t length, flash_address_t crcAddress);
 
 #if defined(_PIC18) || defined(AVR_ARCH)
 
-static void BL_CalculateCRC16_CCITT(flash_address_t startAddress, uint32_t length, uint16_t *crcSeed)
+static void CRC16_Calculate(flash_address_t startAddress, uint32_t length, uint16_t *crcSeed)
 {
     uint32_t byteIndex;
-    uint8_t readByte;
 
     flash_address_t startOfPageAddress = FLASH_PageAddressGet(startAddress);
 
     for (byteIndex = 0U; byteIndex < length; byteIndex++)
     {
-        readByte = FLASH_Read(startOfPageAddress + byteIndex);
+        uint8_t readByte = FLASH_Read((flash_address_t) (startOfPageAddress + byteIndex));
         *crcSeed ^= ((uint16_t) readByte << 8U);
 
         for (uint8_t bit = 8U; bit > 0U; --bit)
@@ -74,16 +72,15 @@ static void BL_CalculateCRC16_CCITT(flash_address_t startAddress, uint32_t lengt
 }
 #elif !defined(_PIC18) && defined(PIC_ARCH)
 
-static void BL_CalculateCRC16_CCITT(flash_address_t startAddress, uint32_t length, uint16_t *crcSeed)
+static void CRC16_Calculate(flash_address_t startAddress, uint32_t length, uint16_t *crcSeed)
 {
     uint32_t wordIndex;
     uint8_t byteIndex;
-    uint16_t readWord;
     uint8_t byteArr[2];
 
     for (wordIndex = 0U; wordIndex < length; wordIndex++)
     {
-        readWord = FLASH_Read(startAddress + wordIndex);
+        uint16_t readWord = FLASH_Read(startAddress + wordIndex);
         byteArr[1] = (uint8_t) (readWord >> 8U);
         byteArr[0] = (uint8_t) (readWord);
         /* Bring the next byte into the checksum. */
@@ -106,11 +103,10 @@ static void BL_CalculateCRC16_CCITT(flash_address_t startAddress, uint32_t lengt
 }
 #endif
 
-static bl_result_t BL_ValidateCRC16_CCITT(flash_address_t startAddress, uint32_t length, flash_address_t crcAddress)
+static bl_result_t CRC16_Validate(flash_address_t startAddress, uint32_t length, flash_address_t crcAddress)
 {
     bl_result_t result = BL_FAIL;
     uint16_t crc = CRC_SEED;
-    uint16_t refCRC = 0x0000U;
     bool refAddrInsideEvaluatedArea = (((crcAddress + 1U) >= startAddress) && (crcAddress < (startAddress + length)));
     bool refAddrOutsideFlash = ((crcAddress + 1U) >= PROGMEM_SIZE);
 
@@ -124,7 +120,9 @@ static bl_result_t BL_ValidateCRC16_CCITT(flash_address_t startAddress, uint32_t
     }
     else
     {
-        BL_CalculateCRC16_CCITT(startAddress, length, &crc);
+        uint16_t refCRC;
+
+        CRC16_Calculate(startAddress, length, &crc);
 #if defined(_PIC18) || defined(AVR_ARCH)
         refCRC = (uint16_t) (
                 ((uint16_t) FLASH_Read(crcAddress)) |
@@ -149,10 +147,12 @@ static bl_result_t BL_ValidateCRC16_CCITT(flash_address_t startAddress, uint32_t
     return result;
 }
 
-bl_result_t BL_VerifyImage(void)
+bl_result_t BL_ImageVerify(void)
 {
     bl_result_t result = BL_ERROR_VERIFICATION_FAIL;
+
     /* cppcheck-suppress misra-c2012-7.2; This rule cannot be followed due to assembly syntax requirements. */
-    result = BL_ValidateCRC16_CCITT((flash_address_t) BL_APPLICATION_START_ADDRESS, HASH_CALC_LENGTH, HASH_STORE_ADDRESS);
+    result = CRC16_Validate((flash_address_t) BL_APPLICATION_START_ADDRESS, HASH_CALC_LENGTH, HASH_STORE_ADDRESS);
+
     return result;
 }
