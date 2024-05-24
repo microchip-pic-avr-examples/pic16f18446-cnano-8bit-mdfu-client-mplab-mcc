@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_app_verify.c
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  * 
  * @brief       This file contains APIs to support verification of the
  *              application image space.
@@ -39,14 +39,14 @@
 #define NO_APPLICATION 0x3FFFU
 #endif
 
-bl_result_t BL_VerifyImage(void)
+bl_result_t BL_ImageVerify(void)
 {
     bl_result_t result = BL_FAIL;
 
     /* cppcheck-suppress misra-c2012-7.2; This rule cannot be followed due to assembly syntax requirements. */
     flash_address_t address = BL_APPLICATION_START_ADDRESS;
 
-    if (FLASH_Read(address) != NO_APPLICATION)
+    if ( (flash_data_t) NO_APPLICATION != FLASH_Read(address))
     {
         result = BL_PASS;
     }

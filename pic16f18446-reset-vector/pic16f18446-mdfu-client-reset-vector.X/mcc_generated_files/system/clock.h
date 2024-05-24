@@ -7,7 +7,9 @@
  * 
  * @brief This file contains the API prototypes and other data types for the Clock driver.
  *
- * @version Driver Version 2.0.3
+ * @version Driver Version 2.0.4
+ *
+ * @version Package Version 4.3.6
  *
 */
 
@@ -36,7 +38,7 @@
 #define	CLOCK_H
 
 #ifndef _XTAL_FREQ
-#define _XTAL_FREQ 4000000
+#define _XTAL_FREQ 32000000
 #endif
 
 /**

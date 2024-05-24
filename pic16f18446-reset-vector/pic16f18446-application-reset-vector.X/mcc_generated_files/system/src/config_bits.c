@@ -7,7 +7,9 @@
  * 
  * @brief This file contains the API Implementation for the Device Configuration Bits driver.
  *
- * @version Driver Version 2.0.1
+ * @version Driver Version 2.0.2
+ *
+ * @version Package Version 1.0.5
 */
 
 /*
@@ -49,7 +51,6 @@
 #pragma config ZCD = OFF    // ZCD Disable bit->Zero-cross detect circuit is disabled at POR.
 #pragma config PPS1WAY = ON    // PPSLOCKED One-Way Set Enable bit->The PPSLOCK bit can be cleared and set only once in software
 #pragma config STVREN = ON    // Stack Overflow/Underflow Reset Enable bit->Stack Overflow or Underflow will cause a reset
-#pragma config DEBUG = OFF    // Background Debugger->Background Debugger disabled
 
 //CONFIG3
 #pragma config WDTCPS = WDTCPS_31    // WDT Period Select bits->Divider ratio 1:65536; software control of WDTPS
