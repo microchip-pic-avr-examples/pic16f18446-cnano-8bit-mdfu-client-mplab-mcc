@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip 
  * software and any derivatives exclusively with Microchip products. 
@@ -22,7 +22,7 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * 
  * @file        bl_ftp.h
- * @defgroup    8bit_mdfu_client_ftp 8-Bit Bootloader Client File Transfer Protocol (FTP) Handler
+ * @defgroup    mdfu_client_8bit_ftp 8-bit Bootloader Client File Transfer Protocol (FTP) Handler
  * 
  * @brief       Transfer binary file blocks using a defined transfer protocol.
  */
@@ -39,26 +39,10 @@
 #include "../bl_result_type.h"
 
 /**
- * @ingroup 8bit_mdfu_client_ftp
- * @brief Receives a single byte from the serial communication layer and
- * processes it into the proper data objects.
- * @param [in] nextByte - The next byte to be processed into the data structures
- * of the FTP handler. \n
- * @return @ref BL_PASS - FTP process cycle finished successfully
- * @return @ref BL_FAIL - FTP process cycle failed unexpectedly
- * @return @ref BL_ERROR_FRAME_VALIDATION_FAIL - FTP process cycle failed at the frame check stage
- * @return @ref BL_ERROR_BUFFER_OVERLOAD - FTP process cycle failed due to a buffer overflow
- * @return @ref BL_ERROR_UNKNOWN_COMMAND - FTP process cycle encountered an unknown command
- * @return @ref BL_ERROR_VERIFICATION_FAIL - FTP process cycle failed to verify the application image
- * @return @ref BL_ERROR_COMMAND_PROCESSING - FTP process cycle failed due to a data or processing related issue
- * @return @ref BL_ERROR_ADDRESS_OUT_OF_RANGE - FTP process cycle failed due to an incorrect address
- */
-bl_result_t FTP_ProcessNextByte(uint8_t nextByte);
-
-/**
- * @ingroup 8bit_mdfu_client_ftp
+ * @ingroup mdfu_client_8bit_ftp
  * @brief Acts as the main task runner of the codebase. This function will be called in a
  * loop to receive bytes from the host and make calls to the responsible software layers.
+ * @param None.
  * @return @ref BL_PASS - FTP process cycle finished successfully
  * @return @ref BL_FAIL - FTP process cycle failed unexpectedly
  * @return @ref BL_ERROR_COMMUNICATION_FAIL - FTP process cycle failed to communicate with the host
@@ -69,6 +53,15 @@ bl_result_t FTP_ProcessNextByte(uint8_t nextByte);
  * @return @ref BL_ERROR_COMMAND_PROCESSING - FTP process cycle failed due to a data or processing related issue
  * @return @ref BL_ERROR_ADDRESS_OUT_OF_RANGE - FTP process cycle failed due to an incorrect address
  */
-bl_result_t FTP_ProcessTask(void);
+bl_result_t FTP_Task(void);
+
+/**
+ * @ingroup mdfu_client_8bit_ftp
+ * @brief Performs the initialization actions required to set up the FTP and dependant layers.
+ * @param None.
+ * @return @ref BL_PASS - FTP initialization finished successfully
+ * @return @ref BL_FAIL - FTP initialization failed unexpectedly
+ */
+bl_result_t FTP_Initialize(void);
 
 #endif // BL_FTP_H

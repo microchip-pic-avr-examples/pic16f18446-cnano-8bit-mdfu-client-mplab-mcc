@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip
  * software and any derivatives exclusively with Microchip products.
@@ -29,9 +29,12 @@
 
 #include "bl_memory.h"
 
-/**@misradeviation{@advisory, 17.8} - The parameter is passed to this wrapper API to increment and
+/**@misradeviation{@advisory, 17.8} The parameter is passed to this wrapper API to increment and
  * read bytes/words from consecutive memory locations. Assigning the value to a different local variable for
  * each API will increase redundancy.
+ */
+/**@misradeviation{@advisory, 8.9} The static buffer should not be declared at local scope
+ * due to portability concerns between various architectures.
  */
 
 static uint16_t erasePageKey;
@@ -77,7 +80,7 @@ bl_mem_result_t BL_EEPROMRead(eeprom_address_t address, eeprom_data_t * buffer, 
     {
         for (uint16_t index = 0; index < length; index++)
         {
-            buffer[index] = EEPROM_Read(address); 
+            buffer[index] = EEPROM_Read(address);
 
             /* cppcheck-suppress misra-c2012-17.8 */
             address++;
@@ -126,7 +129,7 @@ bl_mem_result_t BL_EEPROMWrite(eeprom_address_t address, eeprom_data_t * buffer,
 #else
             NVM_UnlockKeySet(byteWordWriteKey);
 #endif
-            EEPROM_Write(address, buffer[index]); 
+            EEPROM_Write(address, buffer[index]);
             NVM_UnlockKeyClear();
             /* cppcheck-suppress misra-c2012-17.8 */
             address++;
@@ -157,7 +160,7 @@ bl_mem_result_t BL_FlashRead(flash_address_t address, flash_data_t * buffer, siz
     {
         result = BL_MEM_INVALID_ARG;
     }
-    else if ((address < (flash_address_t) 0x00) || (address > PROGMEM_SIZE)) //Check the valid address
+    else if (address > PROGMEM_SIZE) //Check the valid address
     {
         result = BL_MEM_INVALID_ARG;
     }
@@ -197,7 +200,11 @@ bl_mem_result_t BL_FlashRead(flash_address_t address, flash_data_t * buffer, siz
     return result;
 }
 
-bl_mem_result_t BL_FlashWrite(flash_address_t address, flash_data_t * buffer, size_t length) // using precompiled directives for differences in PIC18 and PIC16 impelmentation
+// Static Buffer Declared to Assist in writing blocks of any length upto 1 page
+/* cppcheck-suppress misra-c2012-8.9 */
+static flash_data_t writeBuffer[PROGMEM_PAGE_SIZE];
+
+bl_mem_result_t BL_FlashWrite(flash_address_t address, flash_data_t * buffer, size_t length) // using precompiled directives for differences in PIC18 and PIC16 implementation
 {
 
     bl_mem_result_t result = BL_MEM_FAIL;
@@ -205,13 +212,12 @@ bl_mem_result_t BL_FlashWrite(flash_address_t address, flash_data_t * buffer, si
     uint16_t index;
     uint16_t counter = 0;
     flash_address_t pageStartAddress;
-    flash_data_t writeBuffer[PROGMEM_PAGE_SIZE];
 
     if (buffer == NULL)//Check the valid buffer
     {
         result = BL_MEM_INVALID_ARG;
     }
-    else if ((address < (flash_address_t) 0x00) || (address > PROGMEM_SIZE))//Check valid address
+    else if (address > PROGMEM_SIZE)//Check valid address
     {
         result = BL_MEM_INVALID_ARG;
     }
@@ -263,7 +269,7 @@ bl_mem_result_t BL_FlashWrite(flash_address_t address, flash_data_t * buffer, si
 #if defined (_18FXXQ10_FAMILY_)
                 NVM_UnlockKeySet(erasePageKey);
 #else
-                NVM_UnlockKeySet(erasePageKey); 
+                NVM_UnlockKeySet(erasePageKey);
 #endif
                 result = (bl_mem_result_t) FLASH_PageErase(pageStartAddress); //Erase page in flash
                 NVM_UnlockKeyClear(); //Clear unlock key
@@ -308,7 +314,7 @@ bl_mem_result_t BL_FlashWrite(flash_address_t address, flash_data_t * buffer, si
 #else
                 NVM_UnlockKeySet(rowWriteKey);
 #endif
-                result = FLASH_RowWrite(pageStartAddress, buffer);
+                result = (bl_mem_result_t)FLASH_RowWrite(pageStartAddress,buffer);
                 NVM_UnlockKeyClear();
             }
             else
@@ -328,10 +334,3 @@ bl_mem_result_t BL_FlashWrite(flash_address_t address, flash_data_t * buffer, si
     }
     return result;
 }
-
-
-
-
-
-
-

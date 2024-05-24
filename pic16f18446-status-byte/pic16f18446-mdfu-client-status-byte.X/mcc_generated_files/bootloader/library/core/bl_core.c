@@ -1,5 +1,5 @@
 /**
- * © 2023 Microchip Technology Inc. and its subsidiaries.
+ * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip
  * software and any derivatives exclusively with Microchip products.
@@ -22,13 +22,20 @@
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  * @file        bl_core.c
- * @ingroup     8bit_mdfu_client
+ * @ingroup     mdfu_client_8bit
  *
  * @brief       This file contains APIs to support  file transfer-based
  *              bootloader operations, including  an FTP module and all bootloader
  *              core firmware.
  *
- * @see @ref    8bit_mdfu_client_ftp
+ * @see @ref    mdfu_client_8bit_ftp
+ */
+
+/**@misradeviation{@required, 11.3} Although this is a valid concern in most systems, we are
+ * deviating from common practice here because we know how the compilers will behave for our
+ * hardware. There is no inherent risk for the supported MCUs when casting from these two pointer types.
+ * Be sure to take special care when porting this code to a new hardware system as the endianness of the
+ * hardware does matter.
  */
 
 #include "bl_core.h"
@@ -95,11 +102,11 @@ asm("GOTO " ___mkstr(BL_APPLICATION_INTERRUPT_VECTOR_LOW));
 typedef void (*app_t)(void);
 #endif
 
-static bl_result_t BL_UnlockBootloaderProcessor(uint8_t * bufferPtr);
-static void BL_EraseImageArea(uint32_t startAddress, uint16_t pageEraseUnlockKey);
+static bl_result_t BootloaderProcessorUnlock(uint8_t * bufferPtr);
+static void DownloadAreaErase(uint32_t startAddress, uint16_t pageEraseUnlockKey);
 
 /* cppcheck-suppress misra-c2012-2.7; This rule will not be followed to aid in new feature support in the future. */
-bl_result_t BL_ProcessBootBuffer(uint8_t * bootDataPtr, uint16_t bufferLength)
+bl_result_t BL_BootCommandProcess(uint8_t * bootDataPtr, uint16_t bufferLength)
 {
     bl_result_t bootCommandStatus = BL_ERROR_UNKNOWN_COMMAND;
 
@@ -122,7 +129,7 @@ bl_result_t BL_ProcessBootBuffer(uint8_t * bootDataPtr, uint16_t bufferLength)
     switch (blockHeader.blockType)
     {
     case UNLOCK_BOOTLOADER:
-        bootCommandStatus = BL_UnlockBootloaderProcessor(bootDataPtr);
+        bootCommandStatus = BootloaderProcessorUnlock(bootDataPtr);
         break;
     case WRITE_FLASH:
         if (bootloaderCoreUnlocked)
@@ -138,6 +145,7 @@ bl_result_t BL_ProcessBootBuffer(uint8_t * bootDataPtr, uint16_t bufferLength)
                 // Call the abstracted write function
                 bl_mem_result_t memoryStatus = BL_FlashWrite(
                                                              (flash_address_t) commandHeader.startAddress,
+                                                             /* cppcheck-suppress misra-c2012-11.3 */
                                                              (flash_data_t *) & (bootDataPtr[BL_COMMAND_HEADER_SIZE + BL_BLOCK_HEADER_SIZE]),
                                                              PROGMEM_PAGE_SIZE
                                                              );
@@ -192,12 +200,12 @@ bl_result_t BL_ProcessBootBuffer(uint8_t * bootDataPtr, uint16_t bufferLength)
     return bootCommandStatus;
 }
 
-void BL_StartApplication(void)
+void BL_ApplicationStart(void)
 {
 #if defined(AVR_ARCH)
     /* cppcheck-suppress misra-c2012-7.2;
     This rule cannot be followed due to assembly syntax requirements. */
-    app_t app = (app_t) (BL_APPLICATION_START_ADDRESS / sizeof (app_t));
+    app_t app = (app_t) ((uint64_t) BL_APPLICATION_START_ADDRESS / sizeof (app_t));
     app();
 #elif defined(_PIC18)
     STKPTR = 0x00U;
@@ -220,7 +228,7 @@ bl_result_t BL_Initialize(void)
     return initResult;
 }
 
-static bl_result_t BL_UnlockBootloaderProcessor(uint8_t * bufferPtr)
+static bl_result_t BootloaderProcessorUnlock(uint8_t * bufferPtr)
 {
     bl_result_t commandStatus = BL_FAIL;
 
@@ -319,7 +327,7 @@ static bl_result_t BL_UnlockBootloaderProcessor(uint8_t * bufferPtr)
     {
         bootloaderCoreUnlocked = true;
         commandStatus = BL_PASS;
-        BL_EraseImageArea(
+        DownloadAreaErase(
                         metadataPacket.commandHeader.startAddress,
                         metadataPacket.commandHeader.pageEraseUnlockKey
                         );
@@ -328,9 +336,10 @@ static bl_result_t BL_UnlockBootloaderProcessor(uint8_t * bufferPtr)
     return commandStatus;
 }
 
-static void BL_EraseImageArea(uint32_t startAddress, uint16_t pageEraseUnlockKey)
+/* cppcheck-suppress misra-c2012-2.7 */
+static void DownloadAreaErase(uint32_t startAddress, uint16_t pageEraseUnlockKey)
 {
-    nvm_status_t errorStatus = NVM_OK;
+    nvm_status_t errorStatus;
 
     flash_address_t address;
     address = (flash_address_t) startAddress;
