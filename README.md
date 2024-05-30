@@ -25,7 +25,7 @@ This example will demonstrate:
 - [MPLAB® X IDE 6.20.0](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-x-ide?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
 - [MPLAB® XC8 2.46.0](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-xc-compilers?utm_source=GitHub&utm_medium=TextLink&utm_campaign=MCU8_MMTCha_MPAE_Examples&utm_content=pic16f18446-cnano-8bit-mdfu-client-mplab-mcc-github)
 - [MPLAB® Code Configurator (MCC) 5.5.1](https://www.microchip.com/mplab/mplab-code-configurator)
-- [MPLAB® Code Configurator (MCC) Device Libraries PIC10 / PIC12 / PIC16 / PIC18 MCUs](https://www.microchip.com/mplab/mplab-code-configurator)
+- [MPLAB® Code Configurator (MCC) Device Libraries PIC10 / PIC12 / PIC16 / PIC18 MCUs](https://www.microchip.com/en-us/tools-resources/develop/libraries/microchip-libraries-for-applications)
 - [Python 3.8 or later](https://www.python.org/downloads/)
 - [pyfwimagebuilder v1.0.1.14](https://pypi.org/project/pyfwimagebuilder/)
 - [pymdfu v1.0.1.5](https://pypi.org/project/pymdfu/)
@@ -147,6 +147,7 @@ The following project setup is the same for all the example project pairs. If so
 Linker Additional Options
 - Codeoffset: 0x<APP_START> = 0xD00
 - Checksum: Dependant on the verification scheme
+
 *Check the table below to understand how the Checksum option must be configured in the application projects*
 
 [![app_offset](images/AppOffset.PNG)](images/AppOffset.PNG)
