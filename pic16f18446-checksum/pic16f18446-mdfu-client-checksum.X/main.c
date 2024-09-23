@@ -7,7 +7,9 @@
  *
  * @brief This is the generated driver implementation file for the MAIN driver.
  *
- * @version MAIN Driver Version 1.0.0
+ * @version MAIN Driver Version 1.0.2
+ *
+ * @version Package Version: 3.1.2
  */
 
 /*
@@ -40,7 +42,7 @@
 int main(void)
 {
     SYSTEM_Initialize();
-
+    BL_ExampleInitialize();
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts
     // Use the following macros to:
@@ -57,10 +59,14 @@ int main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
 
-    BL_ExampleInitialize();
 
     while (1)
     {
+        /**
+         *
+         * An example has been provided to you to demonstrate one way that
+         * the MDFU Client Library could be implemented.
+         */
         BL_Example();
     }
 }

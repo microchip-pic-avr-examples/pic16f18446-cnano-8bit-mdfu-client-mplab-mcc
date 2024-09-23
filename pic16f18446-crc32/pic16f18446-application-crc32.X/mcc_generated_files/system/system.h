@@ -7,8 +7,11 @@
  * 
  * @brief This file contains the API prototype for the System Driver.
  *
- * @version Driver Version 2.0.2
+ * @version Driver Version 2.0.3
+ *
+ * @version Package Version 1.0.5
 */
+
 /*
 © [2024] Microchip Technology Inc. and its subsidiaries.
 
@@ -37,9 +40,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "config_bits.h"
-#include "../system/clock.h"
 #include "../system/pins.h"
 #include "../system/interrupt.h"
+#include "../system/clock.h"
 
 /**
  * @ingroup systemdriver
@@ -50,4 +53,7 @@
 */
 void SYSTEM_Initialize(void);
 
-#endif //SYSTEM_H
+#endif	/* SYSTEM_H */
+/**
+ End of File
+*/

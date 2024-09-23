@@ -29,11 +29,11 @@
 
 #include "bl_memory.h"
 
-/**@misradeviation{@advisory, 17.8} The parameter is passed to this wrapper API to increment and
- * read bytes/words from consecutive memory locations. Assigning the value to a different local variable for
- * each API will increase redundancy.
+/**@misradeviation{@advisory, 17.8} - The parameter is passed to this wrapper API to decrement and
+ * write or erase bytes/words from consecutive memory locations until its value is zero. 
+ * Assigning the value to a different local variable for each API will increase redundancy.
  */
-/**@misradeviation{@advisory, 8.9} The static buffer should not be declared at local scope
+/**@misradeviation{@advisory, 8.9} The static buffer will not be declared at local scope
  * due to portability concerns between various architectures.
  */
 

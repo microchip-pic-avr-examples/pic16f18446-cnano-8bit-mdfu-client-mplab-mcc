@@ -35,7 +35,7 @@
 /**
  * @ingroup mdfu_client_8bit
  * @def PIC_ARCH
- * This is a macro that corresponds to the current device architecture.
+ * Corresponds to the current device architecture.
  * This macro is used to conditionally compile parts of the code needed
  * for specific architectures inside of the bootloader core firmware.
  */
@@ -66,7 +66,7 @@
 /**
  * @ingroup mdfu_client_8bit
  * @def BL_VECTORED_INTERRUPTS_ENABLED
- * This is a macro that indicates that the bootloader supports vectored interrupts in the application.
+ * Indicates that the bootloader supports vectored interrupts in the application.
  */
 #define BL_VECTORED_INTERRUPTS_ENABLED (1) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
@@ -74,13 +74,13 @@
  * @def BL_APPLICATION_START_ADDRESS
  * Start of the application memory space.
  */
-#define BL_APPLICATION_START_ADDRESS (0xD00) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
+#define BL_APPLICATION_START_ADDRESS (0xE00) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
  * @ingroup mdfu_client_8bit
  * @def BL_APPLICATION_INTERRUPT_VECTOR_LOW
  * Start address of the low-priority interrupt vector.
  */
-#define BL_APPLICATION_INTERRUPT_VECTOR_LOW (0xD04) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
+#define BL_APPLICATION_INTERRUPT_VECTOR_LOW (0xE04) /* cppcheck-suppress misra-c2012-2.5; This is a false positive. */
 /**
  * @ingroup mdfu_client_8bit
  * @def BL_DEVICE_ID_START_ADDRESS_U

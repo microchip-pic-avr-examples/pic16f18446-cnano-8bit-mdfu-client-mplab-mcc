@@ -7,7 +7,9 @@
  * 
  * @brief This file contains the API prototypes and other data types for the Clock driver.
  *
- * @version Driver Version 2.0.3
+ * @version Driver Version 2.0.4
+ *
+ * @version Package Version 4.3.7
  *
 */
 
@@ -36,7 +38,13 @@
 #define	CLOCK_H
 
 #ifndef _XTAL_FREQ
-#define _XTAL_FREQ 32000000
+/**
+    @ingroup clock control 
+    @def system frequency
+    @misradeviation{@required, 21.1} Defining the system frequency using the _XTAL_FREQ macro is required by the XC8 compiler for the built-in delay functions.
+*/
+/* cppcheck-suppress misra-c2012-21.1 */
+#define _XTAL_FREQ 32000000U
 #endif
 
 /**

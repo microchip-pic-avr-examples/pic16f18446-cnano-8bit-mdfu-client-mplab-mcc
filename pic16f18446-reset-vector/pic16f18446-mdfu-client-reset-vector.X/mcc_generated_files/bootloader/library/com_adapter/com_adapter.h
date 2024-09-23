@@ -25,11 +25,7 @@
  * @brief   This file contains prototypes and other data types for communication adapter layer
  * @defgroup com_adapter Communication Adapter
  */
-/* 
- * MISRA Suppressions
- * --------------------
- * cppcheck-suppress misra-c2012-2.5 ;
- * This is a false positive.
+ /**@misradeviation{@advisory, 2.5} This is a false positive.
  */
 
 #ifndef COM_ADAPTER_H
@@ -46,9 +42,11 @@
 /**
  * @ingroup com_adapter
  * @def SERCOM
- * This macro is used to set SERCOM to the custom name used in the communication module UI.
+ * Sets SERCOM to the custom name used in the communication module UI.
  */
-#define SERCOM ((UART1))
+#ifndef SERCOM
+#define SERCOM SERCOM
+#endif
 
 /* cppcheck-suppress misra-c2012-2.5 */
 /**
@@ -82,6 +80,8 @@
  * 0x18U - com_adapter operation is not finished yet
  * @var com_adapter_result_t: COM_TRANSPORT_FAILURE
  * 0x3CU - com_adapter operation is not finished yet
+ * @var com_adapter_result_t: COM_SEND_COMPLETE
+ * 0x7EU - com_adapter sending operation is finished
  */
 typedef enum
 {
@@ -91,6 +91,7 @@ typedef enum
     COM_BUFFER_ERROR = 0x69U,
     COM_BUSY = 0x18U,
     COM_TRANSPORT_FAILURE = 0x3CU,
+    COM_SEND_COMPLETE = 0x7EU,
 } com_adapter_result_t;
 
 /**

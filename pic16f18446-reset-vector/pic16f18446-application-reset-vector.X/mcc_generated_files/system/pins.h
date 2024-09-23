@@ -68,6 +68,25 @@
 #define LED_SetOpenDrain()       do { ODCONAbits.ODCA2 = 1; } while(0)
 #define LED_SetAnalogMode()      do { ANSELAbits.ANSA2 = 1; } while(0)
 #define LED_SetDigitalMode()     do { ANSELAbits.ANSA2 = 0; } while(0)
+// get/set IO_RC2 aliases
+#define BTN_TRIS                 TRISCbits.TRISC2
+#define BTN_LAT                  LATCbits.LATC2
+#define BTN_PORT                 PORTCbits.RC2
+#define BTN_WPU                  WPUCbits.WPUC2
+#define BTN_OD                   ODCONCbits.ODCC2
+#define BTN_ANS                  ANSELCbits.ANSC2
+#define BTN_SetHigh()            do { LATCbits.LATC2 = 1; } while(0)
+#define BTN_SetLow()             do { LATCbits.LATC2 = 0; } while(0)
+#define BTN_Toggle()             do { LATCbits.LATC2 = ~LATCbits.LATC2; } while(0)
+#define BTN_GetValue()           PORTCbits.RC2
+#define BTN_SetDigitalInput()    do { TRISCbits.TRISC2 = 1; } while(0)
+#define BTN_SetDigitalOutput()   do { TRISCbits.TRISC2 = 0; } while(0)
+#define BTN_SetPullup()          do { WPUCbits.WPUC2 = 1; } while(0)
+#define BTN_ResetPullup()        do { WPUCbits.WPUC2 = 0; } while(0)
+#define BTN_SetPushPull()        do { ODCONCbits.ODCC2 = 0; } while(0)
+#define BTN_SetOpenDrain()       do { ODCONCbits.ODCC2 = 1; } while(0)
+#define BTN_SetAnalogMode()      do { ANSELCbits.ANSC2 = 1; } while(0)
+#define BTN_SetDigitalMode()     do { ANSELCbits.ANSC2 = 0; } while(0)
 /**
  * @ingroup  pinsdriver
  * @brief GPIO and peripheral I/O initialization

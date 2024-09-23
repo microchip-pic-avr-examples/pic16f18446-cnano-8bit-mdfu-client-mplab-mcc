@@ -61,45 +61,53 @@ typedef struct
 
 static bool bootloaderCoreUnlocked = false;
 
-#if defined(PIC_ARCH)
+#if defined(AVR_ARCH)
+/**
+ * AVR devices have vectored interrupts where the base address is configurable
+ * through the IVSEL bit of the CPU Interrupt Controller's CTRLA register. Thus
+ * there is no need for the bootloader to redirect the interrupt vectors.
+ */
+typedef void (*app_t)(void);
+#elif defined(PIC_ARCH)
 #if BL_VECTORED_INTERRUPTS_ENABLED == 1
-#if defined(_PIC18) && !defined(_18FXXQ10_FAMILY_)
-// *****************************************************************************
-// The bootloader code does not use any interrupts.
-// However, the application code may use interrupts.
-// The interrupt vector on a PIC18F is located at
-// address 0x0008 (High) and 0x0018 (Low).
-// The following function will be located
-// at the interrupt vector and will contain a jump to
-// the new application interrupt vectors
-// *****************************************************************************
+#if defined(IVTBASE)
+/**
+ * Newer PIC18F devices have vectored interrupts with the base address specified
+ * by the SFR IVTBASE. Thus there is no need for the bootloader to redirect the
+ * interrupt vectors. The end application should specify IVTBASE as needed.
+ */
+#elif defined(_PIC18)
+/**
+ * The bootloader code does not use any interrupts.
+ * However, the application code may use interrupts.
+ * The interrupt vector on a PIC18F is located at
+ * address 0x0008 (High) and 0x0018 (Low).
+ * The following function will be located
+ * at the interrupt vector and will contain a jump to
+ * the new application interrupt vectors.
+ */
 asm("psect  intcode,global,reloc=2,class=CODE,delta=1");
 asm("GOTO " ___mkstr(BL_APPLICATION_INTERRUPT_VECTOR_HIGH));
 
+#if !(_18FXXQ10_FAMILY_ || _18FXXK40_FAMILY_)
 asm("psect  intcodelo,global,reloc=2,class=CODE,delta=1");
+#endif
 asm("GOTO " ___mkstr(BL_APPLICATION_INTERRUPT_VECTOR_LOW));
-#elif !defined(_PIC18) || defined(_18FXXQ10_FAMILY_)
-// *****************************************************************************
-// The bootloader code does not use any interrupts.
-// However, the application code may use interrupts.
-// The interrupt vector on a PIC16F is located at
-// address 0x0004.
-// The following function will be located
-// at the interrupt vector and will contain a jump to
-// the new application interrupt vector
+#elif !defined(_PIC18)
+/**
+ * The bootloader code does not use any interrupts.
+ * However, the application code may use interrupts.
+ * The interrupt vector on a PIC16F is located at
+ * address 0x0004.
+ * The following function will be located
+ * at the interrupt vector and will contain a jump to
+ * the new application interrupt vector
+ */
 asm("psect  intentry,global,class=CODE,delta=2");
 asm("pagesel " ___mkstr(BL_APPLICATION_INTERRUPT_VECTOR_LOW));
 asm("GOTO " ___mkstr(BL_APPLICATION_INTERRUPT_VECTOR_LOW));
 #endif
-#else
-// *****************************************************************************
-// Newer PIC18F devices have vectored interrupts with the base address specified
-// by SFR IVTBASE. Thus there is no need for the bootloader to redirect the
-// Interrupt vectors. The end application should specify IVTBASE as needed
-// *****************************************************************************
 #endif
-#elif defined(AVR_ARCH)
-typedef void (*app_t)(void);
 #endif
 
 static bl_result_t BootloaderProcessorUnlock(uint8_t * bufferPtr);

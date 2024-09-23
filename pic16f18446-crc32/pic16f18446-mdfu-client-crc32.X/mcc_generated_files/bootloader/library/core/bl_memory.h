@@ -23,7 +23,7 @@
  *
  * @file    bl_memory.h
  * @defgroup bl_memory Memory Helper
- * @brief   This file contains prototypes and data types for the helper functions used with the (Non-Volatile Memory) NVM peripheral driver
+ * @brief   This file contains prototypes and data types for the helper functions used with the Non-Volatile Memory (NVM) peripheral driver
  *
  */
 #ifndef BL_MEMORY_H

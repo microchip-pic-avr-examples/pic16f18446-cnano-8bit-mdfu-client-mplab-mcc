@@ -52,7 +52,7 @@
  * that need to be written into the Flash section of memory
  * @var bl_block_type_t:: WRITE_EEPROM
  * 0x03U - EEPROM Data Block - Identifies operational blocks
- * that should be written into the EEPROM section of memory
+ * that need to be written into the EEPROM section of memory
  */
 typedef enum
 {

@@ -24,6 +24,12 @@
                    projectFiles="true">
       <itemPath>Makefile</itemPath>
       <itemPath>pic16f18446-application-crc32.mc3</itemPath>
+      <itemPath>build_free_image.bat</itemPath>
+      <itemPath>build_free_image.sh</itemPath>
+      <itemPath>build_pro_image.bat</itemPath>
+      <itemPath>build_pro_image.sh</itemPath>
+      <itemPath>pymdfu_update.bat</itemPath>
+      <itemPath>pymdfu_update.sh</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -63,7 +69,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>2.46</languageToolchainVersion>
+        <languageToolchainVersion>2.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -103,21 +109,21 @@
         <property key="default-bitfield-type" value="true"/>
         <property key="default-char-type" value="true"/>
         <property key="define-macros" value=""/>
-        <property key="disable-optimizations" value="true"/>
+        <property key="disable-optimizations" value="false"/>
         <property key="extra-include-directories" value=""/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="garbage-collect-data" value="true"/>
         <property key="garbage-collect-functions" value="true"/>
         <property key="identifier-length" value="255"/>
         <property key="local-generation" value="false"/>
-        <property key="operation-mode" value="pro"/>
+        <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-invariant-enable" value="false"/>
         <property key="optimization-invariant-value" value="16"/>
-        <property key="optimization-level" value="-O0"/>
+        <property key="optimization-level" value="-O1"/>
         <property key="optimization-speed" value="false"/>
         <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -307,7 +313,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>2.46</languageToolchainVersion>
+        <languageToolchainVersion>2.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

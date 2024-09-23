@@ -56,7 +56,7 @@
  * @def MAX_RESPONSE_SIZE
  * Length of the largest possible response in bytes.
  */
-#define MAX_RESPONSE_SIZE       (19U)
+#define MAX_RESPONSE_SIZE       (25U)
 /**
  * @ingroup mdfu_client_8bit_ftp
  * @def TLV_HEADER_SIZE
@@ -167,7 +167,8 @@ typedef enum
 { /* cppcheck-suppress misra-c2012-2.4 */
     FTP_PROTOCOL_VERSION = 0x01U,
     FTP_TRANSFER_PARAMETERS = 0x02U,
-    FTP_TIMEOUT_INFO = 0x03U
+    FTP_TIMEOUT_INFO = 0x03U,
+    FTP_MIN_INTER_MESSAGE_DELAY_INFO = 0x04U,
 } tlv_type_code_t;
 
 typedef struct
@@ -217,6 +218,8 @@ static uint8_t FTP_RESPONSE_BUFFER[MAX_RESPONSE_SIZE];
 static uint8_t FTP_RETRY_BUFFER[MAX_RESPONSE_SIZE];
 
 static bool resetPending = false;
+static bool isComBusy = false;
+static uint32_t minimumInterMessageDelayData = (uint32_t) 0x000F4240U; // 1,000,000 nanoseconds => 1 milliseconds
 
 /* cppcheck-suppress misra-c2012-8.9 */
 static ftp_process_frame_t ftpRetrySender = {
@@ -251,7 +254,7 @@ static ftp_discovery_data_t discoveryData = {
 };
 
 static ftp_version_data_t ftpVersionData = {
-    .major = 0x00,
+    .major = 0x01,
     .minor = 0x01,
     .patch = 0x00,
 };
@@ -282,17 +285,24 @@ static ftp_tlv_t ftpTimeoutTLVData = {
     .valueBuffer = (uint8_t *) & generalCommandTimeoutData
 };
 
+/* cppcheck-suppress misra-c2012-8.9; This rule will not be followed for code clarity. */
+static ftp_tlv_t ftpMinInterMessageDelayTLVData = {
+    .dataType = FTP_MIN_INTER_MESSAGE_DELAY_INFO,
+    .dataLength = 0x04U,
+    .valueBuffer = (uint8_t *) & minimumInterMessageDelayData
+};
+
 static void DeviceResetCheck(void);
 static void ParserDataReset(void);
 static bool SequenceNumberValidate(void);
 static bl_result_t OperationalBlockExecute(void);
 static void ResponseSet(
-                            ftp_process_frame_t * bufferPtr,
-                            uint8_t * responsePayload,
-                            ftp_response_status_t responseStatus,
-                            uint8_t sequenceByte,
-                            uint16_t responsePayloadLength
-                            );
+                        ftp_process_frame_t * bufferPtr,
+                        uint8_t * responsePayload,
+                        ftp_response_status_t responseStatus,
+                        uint8_t sequenceByte,
+                        uint16_t responsePayloadLength
+                        );
 static void ClientInfoResponseSet(ftp_process_frame_t * responseData);
 static uint8_t TLVAppend(uint8_t * dataBufferStart, ftp_tlv_t tlvData);
 static ftp_abort_code_t AbortCodeGet(bl_result_t targetStatus);
@@ -300,8 +310,10 @@ static ftp_transport_failure_code_t TransportFailureCodeGet(bl_result_t targetSt
 
 bl_result_t FTP_Task(void)
 {
-    DeviceResetCheck();
-
+    if (!isComBusy)
+    {
+        DeviceResetCheck();
+    }
     bl_result_t processResult = BL_FAIL;
     com_adapter_result_t comResult = COM_FAIL;
 
@@ -339,6 +351,14 @@ bl_result_t FTP_Task(void)
         // Still Loading
         processResult = BL_BUSY;
     }
+#ifdef MULTI_STAGE_RESPONSE
+    else if (comResult == COM_SEND_COMPLETE)
+    {
+        // flip the busy flag to allow resets
+        isComBusy = false;
+        processResult = BL_BUSY;
+    }
+#endif
     else
     {
         processResult = BL_ERROR_COMMUNICATION_FAIL;
@@ -453,6 +473,10 @@ static bl_result_t OperationalBlockExecute(void)
     case FTP_END_TRANSFER:
         ResponseSet(&ftpResponseSender, NULL, FTP_COMMAND_SUCCESS, ftpHelper.currentSequenceNumber, 0U);
         resetPending = true;
+#ifdef MULTI_STAGE_RESPONSE
+        // Prevent any reset from occurring until the communication layer is working.
+        isComBusy = true;
+#endif
         processResult = BL_PASS;
         break;
 
@@ -570,6 +594,7 @@ static void ClientInfoResponseSet(ftp_process_frame_t * responseData)
             ftpVersionTLVData.dataLength + TLV_HEADER_SIZE +
             ftpTransferParametersTLVData.dataLength + TLV_HEADER_SIZE +
             ftpTimeoutTLVData.dataLength + TLV_HEADER_SIZE +
+            ftpMinInterMessageDelayTLVData.dataLength + TLV_HEADER_SIZE +
             SEQUENCE_DATA_SIZE +
             COMMAND_DATA_SIZE
             );
@@ -585,14 +610,15 @@ static void ClientInfoResponseSet(ftp_process_frame_t * responseData)
     // push each TLV Byte Stream to the buffer
     fileDataOffset += TLVAppend(&(responseData->bufferPtr[fileDataOffset]), ftpVersionTLVData);
     fileDataOffset += TLVAppend(&(responseData->bufferPtr[fileDataOffset]), ftpTransferParametersTLVData);
+    fileDataOffset += TLVAppend(&(responseData->bufferPtr[fileDataOffset]), ftpTimeoutTLVData);
 
     // drop the length of the last TLV append command because it is not needed
-    (void) TLVAppend(&(responseData->bufferPtr[fileDataOffset]), ftpTimeoutTLVData);
+    (void) TLVAppend(&(responseData->bufferPtr[fileDataOffset]), ftpMinInterMessageDelayTLVData);
 }
 
 bl_result_t FTP_Initialize(void)
 {
     // Tell com layer the max size of the buffer it can use
     com_adapter_result_t comInitStatus = COM_Initialize(MAX_TRANSFER_SIZE);
-    return (comInitStatus == COM_PASS) ? BL_PASS: BL_FAIL;
+    return (comInitStatus == COM_PASS) ? BL_PASS : BL_FAIL;
 }

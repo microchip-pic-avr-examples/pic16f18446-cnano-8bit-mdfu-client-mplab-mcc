@@ -1,26 +1,26 @@
 /**
  * © 2024 Microchip Technology Inc. and its subsidiaries.
  *
- * Subject to your compliance with these terms, you may use Microchip 
- * software and any derivatives exclusively with Microchip products. 
- * It is your responsibility to comply with third party license terms 
- * applicable to your use of third party software (including open 
+ * Subject to your compliance with these terms, you may use Microchip
+ * software and any derivatives exclusively with Microchip products.
+ * It is your responsibility to comply with third party license terms
+ * applicable to your use of third party software (including open
  * source software) that may accompany Microchip software.
  *
- * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, 
- * WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, 
- * INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, 
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES,
+ * WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE,
+ * INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT,
  * MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.
  *
- * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, 
- * PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE 
- * OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, 
- * EVEN IF MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE 
- * DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, 
- * MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO 
- * THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU 
+ * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL,
+ * PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE
+ * OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED,
+ * EVEN IF MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE
+ * DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW,
+ * MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO
+ * THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU
  * HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- * 
+ *
  * @file    com_adapter.c
  * @brief   This is the implementation file for the communication adapter layer using UART.
  * @ingroup com_adapter
@@ -35,6 +35,13 @@
  */
 
 #include "com_adapter.h"
+
+/**
+ * @brief Macro workaround for a macro issue in uart
+ */
+#ifndef SERCOM_IsRxReady
+#define SERCOM_IsRxReady        SERCOM__IsRxReady
+#endif
 
 /**
  * @ingroup com_adapter
@@ -69,10 +76,12 @@ static ftp_special_characters_t ftpSpecialCharacters = {
 };
 
 static uint16_t MaxBufferLength = 0U;
+static bool isReceiveWindowOpen = false;
+static bool isEscapedByte= false;
 
 static com_adapter_result_t DataSend(uint8_t *data, size_t length);
 static com_adapter_result_t DataReceive(uint8_t *data, size_t length);
-    
+
 static uint16_t FrameCheckCalculate(uint8_t * ftpData, uint16_t bufferLength)
 {
     uint16_t numBytesChecksummed = 0;
@@ -108,21 +117,21 @@ static com_adapter_result_t DataSend(uint8_t *data, size_t length)
         {
             status = COM_PASS;
 
-            while (!SERCOM.IsTxReady())
+            while (!SERCOM_IsTxReady())
             {
                 // Wait for TX to be ready
             };
             // Call to send the next byte
-            SERCOM.Write(data[byteIndex]);
+            SERCOM_Write(data[byteIndex]);
 
-            if (SERCOM.ErrorGet() != 0U)
+            if (SERCOM_ErrorGet() != 0U)
             {
 #warning "Handle Transmission Error."
             }
         }
     }
 
-    while(!SERCOM.IsTxDone())
+    while (!SERCOM_IsTxDone())
     {
         // Block until last byte shifts out
     }
@@ -133,7 +142,7 @@ static com_adapter_result_t DataSend(uint8_t *data, size_t length)
 static com_adapter_result_t DataReceive(uint8_t *data, size_t length)
 {
     com_adapter_result_t status;
-    
+
     if ((length == 0U) || (data == NULL))
     {
         status = COM_INVALID_ARG;
@@ -144,11 +153,11 @@ static com_adapter_result_t DataReceive(uint8_t *data, size_t length)
         {
             status = COM_PASS;
 
-            if (SERCOM.ErrorGet() == 0U)
+            if (SERCOM_ErrorGet() == 0U)
             {
-                if (SERCOM.IsRxReady()) 
+                if (SERCOM_IsRxReady())
                 {
-                    data[byteIndex] = SERCOM.Read();
+                    data[byteIndex] = SERCOM_Read();
                 }
                 else
                 {
@@ -159,35 +168,31 @@ static com_adapter_result_t DataReceive(uint8_t *data, size_t length)
             {
                 status = COM_FAIL;
                 // Fully reset the UART
-                SERCOM.Deinitialize();
-                SERCOM.Initialize();
+                SERCOM_Deinitialize();
+                SERCOM_Initialize();
             }
         }
     }
     return status;
 }
 
-
 com_adapter_result_t COM_FrameTransfer(uint8_t *receiveBufferPtr, uint16_t *receiveIndexPtr)
 {
     uint8_t nextByte = 0U;
     com_adapter_result_t processResult = COM_FAIL;
 
-    if((receiveBufferPtr == NULL) || (receiveIndexPtr == NULL))
+    if ((receiveBufferPtr == NULL) || (receiveIndexPtr == NULL))
     {
         processResult = COM_INVALID_ARG;
     }
     else
     {
-        if(SERCOM.IsRxReady())
+        if (SERCOM_IsRxReady())
         {
             processResult = DataReceive(&nextByte, 1U);
         }
-        if(processResult == COM_PASS)
+        if (processResult == COM_PASS)
         {
-            static bool isReceiveWindowOpen;
-            static bool isEscapedByte;
-
             if (nextByte == ftpSpecialCharacters.StartOfPacketCharacter)
             {
                 // Open the buffer window
@@ -220,7 +225,7 @@ com_adapter_result_t COM_FrameTransfer(uint8_t *receiveBufferPtr, uint16_t *rece
                         frameCheckSequence = (uint16_t) ((((uint16_t) highByte) << 8) | lowByte);
                     }
 
-                    if(fcs == frameCheckSequence)
+                    if (fcs == frameCheckSequence)
                     {
                         // Set the status to execute the command
                         processResult = COM_PASS;
@@ -272,7 +277,6 @@ com_adapter_result_t COM_FrameTransfer(uint8_t *receiveBufferPtr, uint16_t *rece
     }
     return processResult;
 }
-
 
 com_adapter_result_t COM_FrameSet(uint8_t *responseBufferPtr, uint16_t responseLength)
 {
@@ -343,13 +347,15 @@ com_adapter_result_t COM_FrameSet(uint8_t *responseBufferPtr, uint16_t responseL
     return processResult;
 }
 
-
 com_adapter_result_t COM_Initialize(uint16_t maximumBufferLength)
 {
     com_adapter_result_t result = COM_FAIL;
-    if(maximumBufferLength != 0U)
+    if (maximumBufferLength != 0U)
     {
         MaxBufferLength = maximumBufferLength;
+        isReceiveWindowOpen = false;
+        isEscapedByte = false;
+        SERCOM_Initialize();
         result = COM_PASS;
     }
     else

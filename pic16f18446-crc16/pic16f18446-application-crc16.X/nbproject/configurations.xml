@@ -24,6 +24,12 @@
                    projectFiles="true">
       <itemPath>Makefile</itemPath>
       <itemPath>pic16f18446-application-crc16.mc3</itemPath>
+      <itemPath>build_free_image.bat</itemPath>
+      <itemPath>build_free_image.sh</itemPath>
+      <itemPath>build_pro_image.bat</itemPath>
+      <itemPath>build_pro_image.sh</itemPath>
+      <itemPath>pymdfu_update.bat</itemPath>
+      <itemPath>pymdfu_update.sh</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -63,7 +69,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>2.46</languageToolchainVersion>
+        <languageToolchainVersion>2.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -103,21 +109,21 @@
         <property key="default-bitfield-type" value="true"/>
         <property key="default-char-type" value="true"/>
         <property key="define-macros" value=""/>
-        <property key="disable-optimizations" value="true"/>
+        <property key="disable-optimizations" value="false"/>
         <property key="extra-include-directories" value=""/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="garbage-collect-data" value="true"/>
         <property key="garbage-collect-functions" value="true"/>
         <property key="identifier-length" value="255"/>
         <property key="local-generation" value="false"/>
-        <property key="operation-mode" value="pro"/>
+        <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-invariant-enable" value="false"/>
         <property key="optimization-invariant-value" value="16"/>
-        <property key="optimization-level" value="-O0"/>
+        <property key="optimization-level" value="-O1"/>
         <property key="optimization-speed" value="false"/>
         <property key="optimization-stable-enable" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -132,9 +138,9 @@
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum"
-                  value="D00-3FFD@3FFE,width=-2,algorithm=5,offset=FFFF,polynomial=1021,code=3F"/>
+                  value="E00-3FFD@3FFE,width=-2,algorithm=5,offset=FFFF,polynomial=1021,code=3F"/>
         <property key="additional-options-checksumAVR" value=""/>
-        <property key="additional-options-code-offset" value="0xD00"/>
+        <property key="additional-options-code-offset" value="0xE00"/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
         <property key="additional-options-extend-address" value="false"/>
@@ -157,7 +163,7 @@
         <property key="display-overall-usage" value="true"/>
         <property key="display-psect-usage" value="false"/>
         <property key="extra-lib-directories" value=""/>
-        <property key="fill-flash-options-addr" value="0xD00:0x3FFF"/>
+        <property key="fill-flash-options-addr" value="0xE00:0x3FFF"/>
         <property key="fill-flash-options-const" value="0x3FFF"/>
         <property key="fill-flash-options-how" value="1"/>
         <property key="fill-flash-options-inc-const" value="1"/>
@@ -307,7 +313,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>2.46</languageToolchainVersion>
+        <languageToolchainVersion>2.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -376,9 +382,9 @@
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum"
-                  value="D00-3FFD@3FFE,width=-2,algorithm=5,offset=FFFF,polynomial=1021,code=3F"/>
+                  value="E00-3FFD@3FFE,width=-2,algorithm=5,offset=FFFF,polynomial=1021,code=3F"/>
         <property key="additional-options-checksumAVR" value=""/>
-        <property key="additional-options-code-offset" value="0xD00"/>
+        <property key="additional-options-code-offset" value="0xE00"/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
         <property key="additional-options-extend-address" value="false"/>
@@ -401,7 +407,7 @@
         <property key="display-overall-usage" value="true"/>
         <property key="display-psect-usage" value="false"/>
         <property key="extra-lib-directories" value=""/>
-        <property key="fill-flash-options-addr" value="0xD00:0x3FFF"/>
+        <property key="fill-flash-options-addr" value="0xE00:0x3FFF"/>
         <property key="fill-flash-options-const" value="0x3FFF"/>
         <property key="fill-flash-options-how" value="1"/>
         <property key="fill-flash-options-inc-const" value="1"/>

@@ -2,30 +2,30 @@
 
 manifest_file_version: 1.0.0
 project: pic16f18446-mdfu-client-reset-vector
-creation_date: 2024-05-23T15:16:52.435-07:00[America/Phoenix]
+creation_date: 2024-09-12T08:45:17.378-07:00[America/Phoenix]
 operating_system: Windows 10
 mcc_mode: IDE
 mcc_mode_version: v6.20
 device_name: PIC16F18446
-compiler: XC8 2.46
+compiler: XC8 2.50
 mcc_version: 5.5.1
 mcc_core_version: 5.7.1
-content_manager_version: 5.0.0
+content_manager_version: 5.0.1
 is_mcc_offline: false
 is_using_prerelease_versions: false
 mcc_content_registries: https://registry.npmjs.org/,https://artifacts.microchip.com/artifactory/api/npm/npm/
 device_library: {library_class: com.microchip.mcc.melody.Library, name: Melody, version: 2.7.1}
 packs: {name: PIC16F1xxxx_DFP, version: 1.25.389}
 modules:
-- {name: '@mchp-mcc/delay-blocking-driver', type: MELODY, version: 3.1.0}
-- {name: '@mchp-mcc/main-manager', type: MELODY, version: 3.1.1}
-- {name: '@mchp-mcc/mdfu-client-8bit', type: MELODY, version: 1.0.0}
-- {name: '@mchp-mcc/pic-8bit', type: MELODY, version: 5.28.1}
+- {name: '@mchp-mcc/delay-blocking-driver', type: MELODY, version: 3.2.0}
+- {name: '@mchp-mcc/main-manager', type: MELODY, version: 3.1.2}
+- {name: '@mchp-mcc/mdfu-client-8bit', type: MELODY, version: 1.1.0}
+- {name: '@mchp-mcc/pic-8bit', type: MELODY, version: 5.28.2}
 - {name: '@mchp-mcc/pic16-configuration-bits-v3', type: MELODY, version: 1.0.5}
-- {name: '@mchp-mcc/pic16-pin-manager', type: MELODY, version: 3.6.0}
+- {name: '@mchp-mcc/pic16-pin-manager', type: MELODY, version: 3.6.1}
 - {name: '@mchp-mcc/pin-content-processor', type: MELODY, version: 3.8.0}
-- {name: '@mchp-mcc/scf-pic8-eusart-v1', type: MELODY, version: 7.1.5}
+- {name: '@mchp-mcc/scf-pic8-eusart-v1', type: MELODY, version: 7.1.6}
 - {name: '@mchp-mcc/scf-pic8-interrupt-v2', type: MELODY, version: 5.2.11}
 - {name: '@mchp-mcc/scf-pic8-memory-v2', type: MELODY, version: 5.0.2}
-- {name: '@mchp-mcc/scf-pic8-osc-v1', type: MELODY, version: 4.3.6}
-- {name: '@mchp-mcc/uart-driver', type: MELODY, version: 1.10.0}
+- {name: '@mchp-mcc/scf-pic8-osc-v1', type: MELODY, version: 4.3.7}
+- {name: '@mchp-mcc/uart-driver', type: MELODY, version: 1.10.2}
