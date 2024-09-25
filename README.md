@@ -6,7 +6,7 @@
 
 This example demonstrates how to utilize the MPLAB Code Configurator (MCC) generated code to set up various basic Microchip Device Firmware Update (MDFU) bootloader solutions for the PIC16F18446 Curiosity Nano Evaluation board.
 
-The MDFU is a firmware update system that employs a device-independent host application to update application firmware. The application image loaded into the host adheres to a custom file format, incorporating device and application-specific parameters necessary for the update. This repository offers a foundational setup to configure and customize the MCC Melody 8-Bit MDFU Client library on the PIC16F18446 Curiosity Nano Base for Click boards™, along with instructions for executing the examples.
+The MDFU is a firmware update system that employs a device-independent host application to update application firmware. The application image loaded into the host adheres to a custom file format, incorporating device and application-specific parameters necessary for the update. This repository offers a foundational setup to configure and customize the MCC Melody 8-Bit MDFU Client library on the PIC16F18446 Curiosity Nano Evaluation board with instructions for executing the examples.
 
 This example demonstrates:
 - How to configure the 8-Bit MDFU Client Library in MCC Melody for different verification schemes
@@ -38,14 +38,14 @@ This example demonstrates:
 [![PIC16F18446_CNano](images/190702-MCU8-PHOTO-DM164144-Front-Transparent_crop.png)](images/190702-MCU8-PHOTO-DM164144-Front-Transparent_crop.png)
 
 ## Setup
-The following project setup steps will demonstrate the basic configuration steps for setting up the 8-Bit MDFU Client with Universal Asynchronous Receiver and Transmitter (UART) communication. The configuration bits, clock, Non-Volatile Memory (NVM), and General Purpose Input/Output (GPIO) settings will be consistent across all examples in this repository and any deviations from this setup due to the chosen communication protocol will be described individually later in this section.
+The following project setup steps will demonstrate the basic configuration of the 8-Bit MDFU Client with Universal Asynchronous Receiver and Transmitter (UART) communication. The configuration bits, clock, Non-Volatile Memory (NVM), and General Purpose Input/Output (GPIO) settings will be consistent across all examples in this repository and any deviations from this setup due to the chosen communication protocol will be described individually later in this section.
 
 ### Bootloader Client Setup
 [![mdfu-builder](images/ProjectConfigurationOverview.PNG)](images/ProjectConfigurationOverview.PNG)
 
 **Configuration Bits**
 - External Oscillator Selection bits: Oscillator not enabled
-- Reset Oscillator Selection bits: HFINTOSC (1MHz)
+- Reset Oscillator Selection bits: HFINTOSC (1 MHz)
 
 [![CFG](images/ConfigBitsSetup.PNG)](images/ConfigBitsSetup.PNG)
 
@@ -53,7 +53,7 @@ The following project setup steps will demonstrate the basic configuration steps
 - Clock Source: HFINTOSC
 - HF Internal Clock: 4_MHz
 
-*For CRC16 and CRC32 the Clock is set to 32_MHz*
+*For CRC16 and CRC32 the Clock is set to 32 MHz*
 
 - Clock Divider: 1
 
@@ -67,7 +67,7 @@ The following project setup steps will demonstrate the basic configuration steps
 
 **8-Bit MDFU Client**
 
-This section will guide you through the setup process for UART communication. For more details on configuring and operating other communication protocols, please refer to the pages listed below
+This section will guide you through the setup process for UART communication. For more details on configuring and operating other communication protocols, refer to the pages listed below.
 - [SPI Communication](pic16f18446-spi/Readme.md)
 
 **8-Bit MDFU Client with UART Communication**
@@ -123,7 +123,7 @@ Configure these pins as follows:
 
 [![IO-Pins](images/IOPortSetup.PNG)](images/IOPortSetup.PNG)
 - BOOT INDICATE: Start High
-- BOOT ENTRY: Weak Pullup
+- BOOT ENTRY: Weak Pull-up
 
 [![IO-Settings](images/IOPinsSetup.PNG)](images/IOPinsSetup.PNG)
 
@@ -153,7 +153,7 @@ This section is consistent for any example created in this repository.
 **I/O Pins**
 - GPIO Input: RC2
     - Custom Name: BTN
-    - Weak Pullup: Enabled
+    - Weak Pull-up: Enabled
 - GPIO Output: RA2
     - Custom Name: LED
 
@@ -191,7 +191,7 @@ Fill Flash Memory
 **End Application**
 
  * Open `main.c`
- * Add logic inside the while loop to toggle the onboard LED with a 200 ms rate
+ * Add logic inside the while loop to toggle the on-board LED with a 200 ms rate
  * Add logic under that to reset the device if the BTN is pressed
 ```
 while(1)
@@ -225,7 +225,7 @@ applicationFooter __attribute__((used, section("application_footer"))) = 0xFFFF;
 ```
 
 ## Operation
-In this section, we will walkthrough how to run the examples in this repository. This example shows how to execute the Checksum verification example and update the device Flash memory with the checksum application image to demonstrate a successful device firmware update (DFU) using UART communication. For additional communication protocol operation information, refer to the pages listed below:
+In this section, we will walkthrough how to run the examples in this repository. This example shows how to execute the Checksum verification example and update the device Flash memory with the checksum application image to demonstrate a successful Device Firmware Update (DFU) using UART communication. For additional communication protocol operation information, refer to the pages listed below:
 - [SPI Example Operation](pic16f18446-spi/Readme.md#operation)
 
 **8-Bit MDFU Client Operation**
@@ -296,7 +296,7 @@ Below is an example of the command used in the above step.
 
 - To run the update with the examples, navigate to the project tab and right click, *Important Files>`pymdfu_update.bat`* for Windows or *Important Files>`pymdfu_update.sh`* for Mac and Linux. Double click to open the file.
 - Edit the port number to the CDC port name that is assigned to the Curiosity Nano device
-- Then right click on the script and select Run
+- Right click on the script and select Run
 
 [![UpdateScript_BL](images/runUpdateScript.PNG)](images/runUpdateScript.PNG)
 

@@ -52,7 +52,7 @@
 [![IO-Pins](../images/IOPortSetup.PNG)](../images/IOPortSetup.PNG)
 
 - BOOT INDICATE: Start High
-- BOOT ENTRY: Weak Pullup
+- BOOT ENTRY: Weak Pull-up
 
 [![IO-Settings](../images/IOPinsSetup.PNG)](../images/IOPinsSetup.PNG)
 
