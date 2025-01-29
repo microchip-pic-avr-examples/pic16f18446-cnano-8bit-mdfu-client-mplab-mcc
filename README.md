@@ -68,7 +68,8 @@ The following project setup steps will demonstrate the basic configuration of th
 **8-Bit MDFU Client**
 
 This section will guide you through the setup process for UART communication. For more details on configuring and operating other communication protocols, refer to the pages listed below.
-- [SPI Communication](pic16f18446-spi/Readme.md)
+- [SPI Communication](spi/README.md)
+- [I<sup>2</sup>C Communication](i2c/README.md)
 
 **8-Bit MDFU Client with UART Communication**
 
@@ -226,7 +227,8 @@ applicationFooter __attribute__((used, section("application_footer"))) = 0xFFFF;
 
 ## Operation
 In this section, we will walkthrough how to run the examples in this repository. This example shows how to execute the Checksum verification example and update the device Flash memory with the checksum application image to demonstrate a successful Device Firmware Update (DFU) using UART communication. For additional communication protocol operation information, refer to the pages listed below:
-- [SPI Example Operation](pic16f18446-spi/Readme.md#operation)
+- [SPI Example Operation](spi/README.md#operation)
+- [I<sup>2</sup>C Example Operation](i2c/README.md#operation)
 
 **8-Bit MDFU Client Operation**
 
