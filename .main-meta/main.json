@@ -4,7 +4,7 @@
     "content": {
         "metaDataVersion": "1.3.0",
         "name": "com.microchip.mcu8.mplabx.project.pic16f18446-cnano-8bit-mdfu-client-mplab-mcc",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "displayName": "Getting Started with the 8-Bit MDFU Client for PIC16F18446",
         "projectName": "pic16f18446-cnano-8bit-mdfu-client-mplab-mcc",
         "shortDescription": "GitHub Example for the 8-Bit MDFU Client Library using PIC16F18446 with a CNANO board.",
